@@ -58,13 +58,14 @@ class FileDescription:
     dataframe_post_process_kwarg : Optional[Dict[Any,Any]]  = None
 
 
-def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.DataFrame]:
+def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False)->Dict[str,pd.DataFrame]:
     input_df={}
     multi_files=st.file_uploader('multifiles test',accept_multiple_files=True)
     for file in multi_files:
         for behavior in behaviors:
-            st.write(re.compile(behavior.file_regex_str))
-            st.write(file.name)
+            if show:
+                st.write(re.compile(behavior.file_regex_str))
+                st.write(file.name)
 
             if re.compile(normalize("NFC",behavior.file_regex_str)).match(normalize("NFC",file.name)) is not None:
                 if behavior.var_name:
@@ -72,7 +73,9 @@ def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.Da
                 else:
                     input_key = "_".join(file.name.split(".")[:-1])
 
-                st.write(f"Assuming {file.name} is a {input_key}")
+                if show:
+                    st.write(f"Assuming {file.name} is a {input_key}")
+                    
                 try:
                     _temp_df = behavior.dataframe_read_method(file,**behavior.dataframe_read_method_kwarg)
                 except:
