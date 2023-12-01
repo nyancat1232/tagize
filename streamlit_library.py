@@ -33,7 +33,7 @@ def write_tabs(*funcs,names=None):
 
     '''
     if names is None:
-        names = [f'{num} : {funcs[num].__name__}' for num in range(len(funcs))]
+        names = [f'{funcs[num].__name__}' for num in range(len(funcs))]
 
     tabs = st.tabs(names)
     tabs_func = funcs
