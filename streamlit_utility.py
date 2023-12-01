@@ -55,3 +55,7 @@ def from_pdf_to_dataframe(label,number=0)->'DataFrame':
 def from_txt_to_dataframe(label,preprocess_function):
     if text := st.text_area(label=label):
         return preprocess_function(text)
+
+def from_xlsx_to_dataframe(label):
+    if file := st.file_uploader(label=label):
+        return pd.read_excel(file)
