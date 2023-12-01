@@ -98,14 +98,16 @@ class FileExecutor:
         show : Verbose. Show if accept files.
         ## See Also:
         ## Examples:
+        import streamlit as st
         import pandas as pd
-        from typing import List
-        from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
+        from pyplus.streamlit.streamlit_plus_utility import FileExecutor,FileDescription
 
-        fds : List[FileDescription]=[]
-        fds.append(FileDescription('^train.csv$',pd.read_csv))
-        fds.append(FileDescription('^codebook.csv$',pd.read_csv))
-        dfs = execute_file_descriptions(fds)
+        with st.sidebar:
+            fe = FileExecutor()
+            fe.behaviors.append( FileDescription('ratings.txt',pd.read_table) )
+            dfs = fe.execute_file_descriptions()
+
+        dfs
         '''
         
         input_df={}
