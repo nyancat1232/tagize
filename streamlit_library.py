@@ -21,18 +21,6 @@ def write_col_table(*positional_data,**keyword_data):
             st.write(key)
             st.write(total_data[key])
 
-def write_col_eval(sstr_eval,globs=None):
-    globs = globs.copy()
-    daa = sstr_eval.split('\n')
-    filtered_globals = {key:value for key,value in zip(globs.keys(),globs.values() ) if key.find("__") == -1 }
-
-    daa_eval = [eval(l,filtered_globals) for l in daa]
-
-    st.divider()
-    write_col_table(*daa)
-    write_col_table(*daa_eval)
-    st.divider()
-
 def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="blank"):
 
     my_timezone = pytz.timezone(timezone)
