@@ -28,9 +28,9 @@ def from_txt_to_dataframe(label,preprocess_function,**dataframe_keywords)->pd.Da
         df = pd.DataFrame(txt_pre,**dataframe_keywords)
         return df.set_axis(df.loc[0],axis=1).drop(labels=[0],axis=0)
 
-def from_xlsx_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
-    if file := st.file_uploader(label=label):
-        return pd.read_excel(file,**dataframe_keywords)
+def from_xls_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
+    if file := st.file_uploader(label=label,type='xls'):
+        return pd.read_excel(file,engine="xlrd",**dataframe_keywords)
     
 def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     """Read a parquet file using a ßstrealit uploader
