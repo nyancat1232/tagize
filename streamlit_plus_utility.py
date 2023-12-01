@@ -15,14 +15,17 @@ def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
         return pd.read_csv(filepath_or_buffer=file,**dataframe_keywords)
 
 
-def from_pdf_to_dataframe(label,number=0)->pd.DataFrame:
+def from_pdf_to_dataframe(label,number=0,**dataframe_keywords)->pd.DataFrame:
     if file := st.file_uploader(label=label,type="pdf"):
-        return tb.read_pdf(file)[number]
+        df = tb.read_pdf(file)[number]
+        return pd.DataFrame(df,**dataframe_keywords)
 
-def from_txt_to_dataframe(label,preprocess_function)->pd.DataFrame:
+def from_txt_to_dataframe(label,preprocess_function,**dataframe_keywords)->pd.DataFrame:
     if text := st.text_area(label=label):
-        return preprocess_function(text)
+        txt_pre = preprocess_function(text)
+        df = pd.DataFrame(txt_pre,**dataframe_keywords)
+        return df.set_axis(df.loc[0],axis=1).drop(labels=[0],axis=0)
 
-def from_xlsx_to_dataframe(label)->pd.DataFrame:
+def from_xlsx_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     if file := st.file_uploader(label=label):
-        return pd.read_excel(file)
+        return pd.read_excel(file,**dataframe_keywords)
