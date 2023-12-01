@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def _db_query_exec(sql:str,db:str,show:bool=False):
+def _db_query_exec(sql:str,db:str='out.db',show:bool=False):
     con = sqlite3.connect(db)
     cur = con.cursor()
 
@@ -12,16 +12,14 @@ def _db_query_exec(sql:str,db:str,show:bool=False):
     con.commit()
     con.close()
 
-def create(table,**columns):
-
-    sql = f'''CREATE TABLE IF NOT EXISTS {table}(
-                {','.join(' '.join([key,val]) for key,val in columns.items())}
-    );
-                '''
-    _db_query_exec(sql)
+def create(table,dbfilename='out.db',**columns):
+    sql = f"CREATE TABLE IF NOT EXISTS {table}({','.join(' '.join([key,val]) for key,val in columns.items())});"
+    
+    _db_query_exec(sql,dbfilename)
 
 def read(table,*columns):
     sql = f"SELECT {','.join(columns)} FROM {table}"
+    return sql
     _db_query_exec(sql,True)
 
 def update(table,**adds):
