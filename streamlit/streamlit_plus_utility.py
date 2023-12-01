@@ -4,6 +4,7 @@ import pdfplumber as pdfp
 from dataclasses import dataclass
 from typing import Callable,Dict,Any,List,Optional
 import re
+from unicodedata import normalize
 
 def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     """Read a csv file using a ßstrealit uploader
@@ -64,7 +65,8 @@ def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.Da
         for behavior in behaviors:
             st.write(re.compile(behavior.file_regex_str))
             st.write(file.name)
-            if re.compile(behavior.file_regex_str).match(file.name) is not None:
+
+            if re.compile(normalize("NFC",behavior.file_regex_str)).match(normalize("NFC",file.name)) is not None:
                 if behavior.var_name:
                     input_key = behavior.var_name
                 else:
