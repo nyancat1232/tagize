@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime, timedelta
+import pytz
+from . import streamlit_library as stl
 
 def url_analyzer(url):
     temp = "?"
@@ -29,4 +32,4 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
     st.divider()
     
     st.progress(min(duration_now/goal_duration,1.),text=text)
-    write_col_table(first_time_local,duration_now,first_time_local+goal_duration)
+    stl.write_col_table(first_time_local,duration_now,first_time_local+goal_duration)
