@@ -2,6 +2,7 @@ import pandas as pd
 
 def read_from_server(schema_name:str,table_name:str,st_conn, index:bool=False):
     with st_conn.connect() as conn_conn:
+        
         return pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
 
 def get_foreign_keys(schema:str,table:str,conn):
@@ -39,3 +40,16 @@ def get_identity(schema:str,table:str,conn):
         ret = pd.read_sql_query(sql,con=con_con)
     
         return ret['identity_column']
+    
+def get_default_value(schema:str,table:str,conn):
+    sql = f'''SELECT column_name, column_default
+  FROM information_schema.columns
+ WHERE table_schema = '{schema}'
+   AND table_name = '{table}'
+   AND column_default IS NOT NULL ;
+'''
+        
+    with conn.connect() as con_con:
+        ret = pd.read_sql_query(sql,con=con_con)
+    
+        return ret.set_index('column_name')
