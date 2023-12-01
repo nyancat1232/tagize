@@ -8,6 +8,10 @@ def dec_func(old_func):
     return new_func
 
 def write_col_table(*positional_data,**keyword_data):
+    if len(positional_data)+len(keyword_data)<1:
+        st.write('No arguments')
+        return
+
     column_table = st.columns(len(positional_data)+len(keyword_data))
 
     total_data = dict(enumerate(positional_data))
