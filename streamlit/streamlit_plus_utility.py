@@ -43,3 +43,24 @@ def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     """
     if file := st.file_uploader(label=label,type="parquet"):
         return pd.read_parquet(path=file,**dataframe_keywords)
+    
+
+def do_behavior_of_multiple_files(behaviors):
+    """
+    Example:
+    behaviors=[]
+    behaviors.append({'file_regex':re.compile("^file.cscv$"),'var_name':'name','dataframe_pre_process':to_df,'dataframe_post_process':df_func})
+    """
+    input_df={}
+    st.write([behavior['file_regex']for behavior in behaviors])
+    multi_files=st.file_uploader('multifiles test',accept_multiple_files=True)
+    for file in multi_files:
+        for behavior in behaviors:
+            if behavior['file_regex'].match(file.name) is not None:
+                st.write(f"Assuming {file.name} is a {behavior['var_name']}")
+                try:
+                    _temp_df = behavior['dataframe_pre_process'](file,**behavior['dataframe_pre_process_kwarg'])
+                except:
+                    _temp_df = behavior['dataframe_pre_process'](file)
+                input_df[behavior['var_name']] = behavior['dataframe_post_process'](_temp_df)
+    return input_df
