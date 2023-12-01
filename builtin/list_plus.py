@@ -33,3 +33,13 @@ def transpose_list(list_in,default_val=None):
 
 def split_list_by_key(list_key,list_in):
     return {key: list_in[ind::len(list_key)] for ind,key in enumerate(list_key)}
+
+
+def apply(multi_list,func):
+    rr = []
+    for v in multi_list:
+        if type(v)==list:
+            rr.append(apply(v,func))
+        else:
+            rr.append(func(v))
+    return rr

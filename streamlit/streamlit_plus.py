@@ -1,4 +1,6 @@
 import streamlit as st
+import numpy as np
+
 
 def divide(old_func):
     def new_func(*parg,**kwarg):
@@ -92,3 +94,14 @@ def list_text_inputs(label):
     
 
     return input_data
+
+
+def list_slider_inputs(label,row_nums=2,col_nums=2):
+    res = np.zeros(shape=(row_nums,col_nums))
+
+    cols = st.columns(col_nums)
+    for row_ind in range(row_nums):
+        for col_ind,_ in enumerate(cols):
+            with cols[col_ind]:
+                res[row_ind,col_ind]=st.slider(f'{label},row_{row_ind},column_{col_ind}',-1.,1.,0.)
+    return res
