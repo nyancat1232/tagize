@@ -83,6 +83,19 @@ def get_foreign_keys(schema_name:str,table_name:str,st_conn):
         return ret.set_index('current_column_name')
     
 def get_table_list(st_conn):
+    '''
+    Get table list in a database.
+    ## Parameters:
+    st_conn : SQLconnection
+    .
+    ## See Also:
+    
+    ## Examples:
+    import streamlit as st
+    st_conn = st.connection(name='postgresql',type='sql')
+
+    df_list=get_table_list(st_conn)
+    '''
     sql = f'''SELECT DISTINCT table_schema,table_name
     FROM information_schema.table_constraints;
     '''
