@@ -43,9 +43,6 @@ def write_tabs(*funcs,names=None):
             tab_func()
 
 def add_tab_func(func_list):
-    '''Decoration for write_tabs
-    func_list => which collects a function.
-    '''
     def ret_func(func):
         func_list.append(func)
     return ret_func
