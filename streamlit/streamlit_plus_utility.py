@@ -50,6 +50,19 @@ def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
 
 @dataclass
 class FileDescription:
+    '''
+    How accepting files
+    ## See Also:
+    execute_file_descriptions
+    ## Examples:
+    import pandas as pd
+    from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
+
+    fds : List[FileDescription] = []
+    fds.append(FileDescription("[A-Za-z_]+.csv$",pd.read_csv))
+
+    dfs = execute_file_descriptions(fds,label='import csvs')
+    '''
     file_regex_str : str
     dataframe_read_method : Callable
     var_name : Optional[str] = None
@@ -59,6 +72,16 @@ class FileDescription:
 
 
 def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False)->Dict[str,pd.DataFrame]:
+    '''
+    Accept multiple files and reads some files you want.
+    ## Parameters:
+    behaviors : Case that accept files.
+    show : Verbose. Show if accept files.
+    ## See Also:
+    ## Examples:
+    ??
+    '''
+    
     input_df={}
     multi_files=st.file_uploader('multifiles test',accept_multiple_files=True)
     for file in multi_files:
