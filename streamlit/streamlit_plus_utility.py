@@ -50,8 +50,8 @@ def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
 @dataclass
 class FileDescription:
     file_regex : re
-    var_name : str
     dataframe_read_method : Callable
+    var_name : Optional[str] = None
     dataframe_post_process : Optional[Callable] = None
     dataframe_read_method_kwarg : Optional[Dict[Any,Any]] = None
     dataframe_post_process_kwarg : Optional[Dict[Any,Any]]  = None
@@ -64,18 +64,23 @@ def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.Da
     for file in multi_files:
         for behavior in behaviors:
             if behavior.file_regex.match(file.name) is not None:
-                st.write(f"Assuming {file.name} is a {behavior.var_name}")
+                if behavior.var_name:
+                    input_key = behavior.var_name
+                else:
+                    input_key = "_".join(file.name.split(".")[:-1])
+
+                st.write(f"Assuming {file.name} is a {input_key}")
                 try:
                     _temp_df = behavior.dataframe_read_method(file,**behavior.dataframe_read_method_kwarg)
                 except:
                     _temp_df = behavior.dataframe_read_method(file)
                 
                 try:
-                    input_df[behavior.var_name] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
+                    input_df[input_key] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
                 except:
                     try:
-                        input_df[behavior.var_name] = behavior.dataframe_post_process(_temp_df)
+                        input_df[input_key] = behavior.dataframe_post_process(_temp_df)
                     except:
-                        input_df[behavior.var_name] = _temp_df
+                        input_df[input_key] = _temp_df
 
     return input_df
