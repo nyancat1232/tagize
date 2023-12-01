@@ -1,4 +1,6 @@
-def swap_in_list(list_,index1,index2,mutable=False):
+from typing import List,Any
+
+def swap_in_list(list_,index1:int,index2:int,mutable:bool=False):
     if mutable:
         temp = list_[index1]
         list_[index1] = list_[index2]
@@ -9,15 +11,15 @@ def swap_in_list(list_,index1,index2,mutable=False):
         ret[index2] = list_[index1]
         return ret
     
-def list_change_position(list_,index_from,index_to,mutable=False):
+def change_position(list_:List[Any],index_from:int,index_to:int,mutable=False):
     if mutable:
         raise Exception("No implementation")
     else:
         temp = list_.copy()
         temp_val = temp[index_from]
-        ret = temp[:index_from]+temp[index_from+1:]
-        ret.insert(index_to,temp_val)
-        return ret
+        temp.pop(index_from)
+        temp.insert(index_to,temp_val)
+        return temp
     
 def split_list(list_in, split_col_num=1):
     return [list_in[col::split_col_num] for col in range(split_col_num)]
