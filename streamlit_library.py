@@ -37,6 +37,16 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
     write_col_table(first_time_local,duration_now,first_time_local+goal_duration)
 
 def write_tabs(*funcs,names=None):
+    '''
+    from amesho import streamlit_library as stl
+
+    func_list=[]
+    @stl.add_func(func_list):
+    def func_name():
+        pass
+    stl.write_tabs(*func_list)
+
+    '''
     if names is None:
         names = [f'{num} : {funcs[num].__name__}' for num in range(len(funcs))]
 
