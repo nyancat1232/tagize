@@ -32,7 +32,6 @@ def write_col_eval(sstr_eval,globs=None):
     write_col_table(*daa_eval)
     st.divider()
 
-
 def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="blank"):
 
     my_timezone = pytz.timezone(timezone)
@@ -47,16 +46,6 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
     
     st.progress(min(duration_now/goal_duration,1.),text=text)
     write_col_table(first_time_local,duration_now,first_time_local+goal_duration)
-
-def time_input_output(filename,label='blank'):
-    if st.button(label=label):
-        dio.save_time_direct(filename)
-    return dio.load_time_direct(filename)
-
-def get_button_dataframe(label,column_name,value,dataframe,path,df_file):
-    if st.button(label=label):
-        dataframe[column_name] = value
-        dataframe.to_pickle(path+'/'+df_file)
 
 def write_tabs(*funcs,names=None):
     if names is None:
