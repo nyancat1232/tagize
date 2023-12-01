@@ -47,3 +47,6 @@ def add_tab_func(func_list):
         func_list.append(func)
     return ret_func
 
+
+def list_input(*attribute_list):
+    return {attr : st.text_input(label=f'{attr}') for attr in attribute_list}

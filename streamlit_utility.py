@@ -16,9 +16,6 @@ def url_analyzer(url):
     result_url += "&".join(["=".join([key,val]) for key,val in result.items()])
     return result_pd_out, result_url
 
-def list_input(attribute_list):
-    return {attr : st.text_input(label=f'{attr}') for attr in attribute_list}
-
 def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="blank"):
 
     my_timezone = pytz.timezone(timezone)
