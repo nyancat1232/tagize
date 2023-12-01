@@ -16,9 +16,11 @@ class PDLibrary:
             self._data = pd.DataFrame(columns=columns_name)
             self._data.index.name = index_name
             self.save_data()
-
+        finally:
+            self._data.index = pd.DatetimeIndex(self._data.index)
+            
     def append_data_nowtime(self,init_var=np.nan,**col_val):
-        new_index = datetime.utcnow().strftime("%F %T")
+        new_index = datetime.utcnow()
         
         self._data.loc[new_index] = np.nan
         for column_name,column_val in col_val.items():
@@ -26,6 +28,14 @@ class PDLibrary:
 
     def save_data(self):
         self._data.to_csv(path_or_buf=self._path)
+
+    def get_recent_data(self,column_name):
+        filtered_data = self._data[column_name]
+        filtered_data =  filtered_data[filtered_data.notna()]
+        try:
+            return filtered_data.loc[max(filtered_data.index)]
+        except ValueError:
+            return 0
     
 
 import streamlit as st
