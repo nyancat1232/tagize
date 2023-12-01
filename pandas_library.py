@@ -46,8 +46,3 @@ class PDLibrary_Streamlit(PDLibrary):
     
     def show_data(self):
         st.dataframe(self._data)
-    def add_save_button(self,label):
-        st.download_button(label='download results',data=self.data.to_csv().encode('UTF-8'),file_name='result.csv',)
-        st.file_uploader()
-
-    
