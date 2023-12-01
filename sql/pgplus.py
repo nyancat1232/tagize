@@ -242,11 +242,27 @@ def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
     with st_conn.connect() as conn_conn:
         return df.to_sql(name=table_name,con=conn_conn,schema=schema_name,if_exists='append',index=False)
 
-def upload_to_sql_by_value(schema_name,table_name,select_row_by_column,select_row_by_column_val,column_name,value_name,st_conn):
+def upload_to_sql_by_value(schema_name,table_name,st_conn,select_column,select_val,edit_column,edit_value):
+    '''
+    Select column and then value for selecting a row. Edit a value in a row.
+
+    ## Examples:
+    > aaaa.bbbb
+    >    a  b  c
+    > 0  1  2  3
+    > 1  4  5  6
+
+    conn = st.connection(...)
+    upload_to_sql_by_value(aaaa,bbbb,conn,'b',5,'c',2)
+    > aaaa.bbbb
+    >    a  b  c
+    > 0  1  2  3
+    > 1  4  5  2
+    '''
     update_query = text(f"""
     UPDATE {schema_name}.{table_name}
-    SET {column_name} = {value_name}
-    WHERE {select_row_by_column} = '{select_row_by_column_val}';
+    SET {edit_column} = {edit_value}
+    WHERE {select_column} = '{select_val}';
     """)
     update_query
     with st_conn.session as session:
