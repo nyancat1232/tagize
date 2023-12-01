@@ -61,3 +61,7 @@ def from_csv_to_dataframe(label):
 def from_pdf_to_dataframe(label,number=0):
     if file := st.file_uploader(label=label,type="pdf"):
         return tb.read_pdf(file)[number]
+
+def from_txt_to_dataframe(label,preprocess_function):
+    if text := st.text_area(label=label):
+        return preprocess_function(text)
