@@ -53,9 +53,10 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk[uc])
 
     result_to_append
-    result_to_append = st.data_editor(result_to_append,num_rows="dynamic",hide_index=True,column_config=config_append_col)
+    result_to_append = st.data_editor(result_to_append,num_rows="dynamic",hide_index=True,column_config=config_append_col,)
     if st.button(f'upload {schema_name}.{table_name}'):
         result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
+        st.rerun()
 
 @dataclass
 class TableInput:
