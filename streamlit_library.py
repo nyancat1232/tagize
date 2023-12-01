@@ -49,10 +49,17 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
 
 def write_tabs(*funcs,names=None):
     if names is None:
-        names = [f'col {num}' for num in range(len(funcs))]
+        names = [f'{num} : {funcs[num].__name__}' for num in range(len(funcs))]
 
     tabs = st.tabs(names)
     tabs_func = funcs
     for tab,tab_func in zip(tabs,tabs_func):
         with tab:
             tab_func()
+
+def add_func(func_list):
+    '''Decoration for write_tabs
+    '''
+    def ret_func(func):
+        func_list.append(func)
+    return ret_func
