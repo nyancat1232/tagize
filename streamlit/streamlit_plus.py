@@ -48,8 +48,20 @@ def add_tab_func(func_list):
     return ret_func
 
 
-def list_text_input(*attribute_list,**kwarg_text_input):
+def list_text_input_by_vals(*attribute_list,**kwarg_text_input):
     return {attr : st.text_input(label=f'{attr}',**kwarg_text_input) for attr in attribute_list}
 
 def list_checkbox(*names):
     return {name : st.checkbox(label=name,value=False) for name in names}
+
+def list_text_inputs(label):
+    amount = st.slider(label=label,min_value=1,max_value=100,value=1)
+
+    def gen_names(max_num):
+        cur_name=0
+        yield cur_name
+        while (cur_name:=cur_name+1)<max_num:
+            yield cur_name
+
+    text_inputs = list_text_input_by_vals(*gen_names(amount))
+    return text_inputs
