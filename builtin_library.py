@@ -54,3 +54,13 @@ def check_match(word,query):
     count = (count_trues(results)==len(word))
     return {'count':count,'results':results}
 
+def swap_in_list(list_,index1,index2,mutable=False):
+    if mutable:
+        temp = list_[index1]
+        list_[index1] = list_[index2]
+        list_[index2] = temp
+    else:
+        ret = list_.copy()
+        ret[index1] = list_[index2]
+        ret[index2] = list_[index1]
+        return ret
