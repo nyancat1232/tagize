@@ -35,7 +35,7 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
 import pandas as pd
 import tabula as tb
 
-def from_csv_to_dataframe(label,**dataframe_keywords)->'DataFrame':
+def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     """Convert csv file which is from streamlit to DataFrame.
 
     Args:
@@ -48,14 +48,14 @@ def from_csv_to_dataframe(label,**dataframe_keywords)->'DataFrame':
         return pd.read_csv(filepath_or_buffer=file,**dataframe_keywords)
 
 
-def from_pdf_to_dataframe(label,number=0)->'DataFrame':
+def from_pdf_to_dataframe(label,number=0)->pd.DataFrame:
     if file := st.file_uploader(label=label,type="pdf"):
         return tb.read_pdf(file)[number]
 
-def from_txt_to_dataframe(label,preprocess_function):
+def from_txt_to_dataframe(label,preprocess_function)->pd.DataFrame:
     if text := st.text_area(label=label):
         return preprocess_function(text)
 
-def from_xlsx_to_dataframe(label):
+def from_xlsx_to_dataframe(label)->pd.DataFrame:
     if file := st.file_uploader(label=label):
         return pd.read_excel(file)
