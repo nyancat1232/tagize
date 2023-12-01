@@ -6,8 +6,12 @@ def url_analyzer(url):
     result = url[url.find(temp)+len(temp):].split("&")
     result = [r.split("=") for r in result]
     result_column = ['attribute','value']
-    result = pd.DataFrame(result,columns=result_column)
-    return result
+    result_pd_in = pd.DataFrame(result,columns=result_column)
+    result = list_input(result_pd_in['attribute'])
+    result_pd_out = pd.Series(result)
+    result_url = url[:url.find(temp)+len(temp)]
+    result_url += "&".join(["=".join([key,val]) for key,val in result.items()])
+    return result_pd_out, result_url
 
 def list_input(attribute_list):
     return {attr : st.text_input(label=f'{attr}') for attr in attribute_list}
