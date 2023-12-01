@@ -4,7 +4,7 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
     with st_conn.connect() as conn_conn:
         return pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
 
-def get_foreign_keys(schema,table,conn):
+def get_foreign_keys(schema:str,table:str,conn):
     foreign_key_sql = f'''
     SELECT KCU.column_name AS current_column_name,
         CCU.table_schema AS upper_schema, 
@@ -22,3 +22,20 @@ def get_foreign_keys(schema,table,conn):
         ret = pd.read_sql_query(foreign_key_sql,con=con_con).drop_duplicates()
     
         return ret.set_index('current_column_name')
+    
+def get_identity(schema:str,table:str,conn):
+    sql = f'''SELECT attname as identity_column
+  FROM pg_attribute 
+  JOIN pg_class 
+    ON pg_attribute.attrelid = pg_class.oid
+  JOIN pg_namespace
+    ON pg_class.relnamespace = pg_namespace.oid
+ WHERE nspname = '{schema}'
+   AND relname = '{table}'
+   AND attidentity = 'a';
+'''
+    
+    with conn.connect() as con_con:
+        ret = pd.read_sql_query(sql,con=con_con)
+    
+        return ret['identity_column']
