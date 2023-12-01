@@ -8,6 +8,22 @@ def divide(old_func):
     return new_func
 
 def write_columns(*positional_data,**keyword_data):
+    '''
+    write by columns
+    ## Parameters:
+    positional_data : Any
+    .
+    keyword_data : Any
+    .
+    ## See Also:
+    st.write
+    st.columns
+    ## Examples:
+    from pyplus.streamlit.streamlit_plus import write_columns
+    import streamlit as st
+
+    write_columns(arg1='hello',arg2='world')
+    '''
     if len(positional_data)+len(keyword_data)<1:
         st.write('No arguments')
         return
