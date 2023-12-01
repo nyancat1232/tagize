@@ -48,5 +48,8 @@ def add_tab_func(func_list):
     return ret_func
 
 
-def list_input(*attribute_list):
-    return {attr : st.text_input(label=f'{attr}') for attr in attribute_list}
+def list_text_input(*attribute_list,**kwarg_text_input):
+    return {attr : st.text_input(label=f'{attr}',**kwarg_text_input) for attr in attribute_list}
+
+def list_checkbox(*names):
+    return {name : st.checkbox(label=name,value=False) for name in names}
