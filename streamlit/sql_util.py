@@ -1,5 +1,6 @@
 import streamlit as st
 from pyplus.sql.pgplus import read_from_server,get_default_value,get_foreign_keys,get_identity,get_table_list
+from dataclasses import dataclass
 
 def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     result = read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
@@ -56,9 +57,12 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     if st.button(f'upload {schema_name}.{table_name}'):
         result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
 
+@dataclass
+class TableInput:
+    schema : str
+    table : str
 
-
-def table_selection(st_conn):
+def table_selection(st_conn,label:str):
     '''
     table selection by using streamlit library.
     ## Parameters:
@@ -66,6 +70,7 @@ def table_selection(st_conn):
     (arg_description).
     ## Examples:
     import streamlit as st
+
     st_conn = st.connection(name='postgresql',type='sql')
 
     with st.sidebar:
@@ -74,7 +79,7 @@ def table_selection(st_conn):
     df_list=get_table_list(st_conn)
     st.dataframe(df_list)
 
-    ret={}
-    ret['schema'] = st.selectbox(label='Input of schema',options=df_list['table_schema'].unique())
-    ret['table'] = st.selectbox(label="Input of table",options=df_list['table_name'][df_list['table_schema']==ret['schema']])
-    return ret
+    
+    schema = st.selectbox(label=f'{label} of schema',options=df_list['table_schema'].unique())
+    table = st.selectbox(label=f"{label} of table",options=df_list['table_name'][df_list['table_schema']==schema])
+    return TableInput(schema,table)
