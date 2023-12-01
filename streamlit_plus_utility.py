@@ -1,10 +1,5 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timedelta
-import pytz
-from . import streamlit_plus as stl
-
-import pandas as pd
 import tabula as tb
 
 def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
