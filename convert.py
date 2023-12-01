@@ -10,7 +10,7 @@ def check_if_str(function):
 def convert_line_str(input_str,include_in_line = ''):
     def processing_line(line):
         if line.find(include_in_line) != -1:
-            return line[line.find(': ')+len(': '):]
+            return line[line.find(include_in_line)+len(include_in_line):]
         else:
             return None
     
