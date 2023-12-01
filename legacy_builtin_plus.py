@@ -1,14 +1,4 @@
-from datetime import datetime
 
-
-def date_only_month_and_day(str_date,spearator='.'):
-    month,day = map(int,str_date.split(spearator))
-    now_date = datetime.utcnow()
-    year = now_date.year
-    comp_date = datetime(year,month,day)
-    if comp_date > now_date:
-        year -= 1
-    return datetime(year,month,day).date()
 
 def rename_duplicate(column_names):
     def check_duplicate(temp_buffer,s,index):
