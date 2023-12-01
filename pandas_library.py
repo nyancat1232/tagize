@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from datetime import dateime
+from datetime import datetime
 from . import streamlit_library as stlt
 import pytz
 
