@@ -1,6 +1,6 @@
 import streamlit as st
 
-def dec_func(old_func):
+def divide(old_func):
     def new_func(*parg,**kwarg):
         st.divider()
         old_func(*parg,**kwarg)
