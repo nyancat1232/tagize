@@ -49,3 +49,9 @@ def add_tab_func(func_list):
     def ret_func(func):
         func_list.append(func)
     return ret_func
+
+import pandas as pd
+
+def from_csv_to_dataframe(label):
+    if file := st.file_uploader(label=label,type="csv"):
+        return pd.read_csv(filepath_or_buffer=file)
