@@ -49,7 +49,7 @@ def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
 
 @dataclass
 class FileDescription:
-    file_regex : re
+    file_regex_str : str
     dataframe_read_method : Callable
     var_name : Optional[str] = None
     dataframe_post_process : Optional[Callable] = None
@@ -59,11 +59,12 @@ class FileDescription:
 
 def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.DataFrame]:
     input_df={}
-    st.write([behavior.file_regex for behavior in behaviors])
     multi_files=st.file_uploader('multifiles test',accept_multiple_files=True)
     for file in multi_files:
         for behavior in behaviors:
-            if behavior.file_regex.match(file.name) is not None:
+            st.write(re.compile(behavior.file_regex_str))
+            st.write(file.name)
+            if re.compile(behavior.file_regex_str).match(file.name) is not None:
                 if behavior.var_name:
                     input_key = behavior.var_name
                 else:
