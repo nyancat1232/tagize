@@ -99,7 +99,7 @@ def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.Da
                     input_df[behavior.var_name] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
                 except:
                     try:
-                        input_df[behavior.var_name] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
+                        input_df[behavior.var_name] = behavior.dataframe_post_process(_temp_df)
                     except:
                         input_df[behavior.var_name] = _temp_df
 
