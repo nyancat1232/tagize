@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import tabula as tb
+import pdfplumber as pdfp
 
 def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     """Read a csv file using a ßstrealit uploader
@@ -17,8 +17,10 @@ def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
 
 def from_pdf_to_dataframe(label,number=0,**dataframe_keywords)->pd.DataFrame:
     if file := st.file_uploader(label=label,type="pdf"):
-        df = tb.read_pdf(file)[number]
-        return pd.DataFrame(df,**dataframe_keywords)
+        #df = tb.read_pdf(file)[number]
+        with pdfp.open(file) as pdf:
+            lis_ = pdf.pages[0].extract_table()
+        return pd.DataFrame(lis_,**dataframe_keywords)
 
 def from_txt_to_dataframe(label,preprocess_function,**dataframe_keywords)->pd.DataFrame:
     if text := st.text_area(label=label):
