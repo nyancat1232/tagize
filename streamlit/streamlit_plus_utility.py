@@ -62,5 +62,9 @@ def do_behavior_of_multiple_files(behaviors):
                     _temp_df = behavior['dataframe_pre_process'](file,**behavior['dataframe_pre_process_kwarg'])
                 except:
                     _temp_df = behavior['dataframe_pre_process'](file)
-                input_df[behavior['var_name']] = behavior['dataframe_post_process'](_temp_df)
+                try:
+                    input_df[behavior['var_name']] = behavior['dataframe_post_process'](_temp_df)
+                except:
+                    input_df[behavior['var_name']] = _temp_df
+
     return input_df
