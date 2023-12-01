@@ -72,12 +72,13 @@ class FileDescription:
     execute_file_descriptions
     ## Examples:
     import pandas as pd
+    from typing import List
     from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
 
-    fds : List[FileDescription] = []
-    fds.append(FileDescription("[A-Za-z_]+.csv$",pd.read_csv))
-
-    dfs = execute_file_descriptions(fds,label='import csvs')
+    fds : List[FileDescription]=[]
+    fds.append(FileDescription('^train.csv$',pd.read_csv))
+    fds.append(FileDescription('^codebook.csv$',pd.read_csv))
+    dfs = execute_file_descriptions(fds)
     '''
     file_regex_str : str
     dataframe_read_method : Callable
@@ -95,7 +96,14 @@ def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False,
     show : Verbose. Show if accept files.
     ## See Also:
     ## Examples:
-    ??
+    import pandas as pd
+    from typing import List
+    from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
+
+    fds : List[FileDescription]=[]
+    fds.append(FileDescription('^train.csv$',pd.read_csv))
+    fds.append(FileDescription('^codebook.csv$',pd.read_csv))
+    dfs = execute_file_descriptions(fds)
     '''
     
     input_df={}
