@@ -8,7 +8,7 @@ import pandas as pd
 import tabula as tb
 
 def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
-    """Convert csv file which is from streamlit to DataFrame.
+    """Read a csv file using a ßstrealit uploader
 
     Args:
         label (str): texts to show.
