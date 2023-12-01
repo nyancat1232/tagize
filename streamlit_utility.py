@@ -33,3 +33,28 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
     
     st.progress(min(duration_now/goal_duration,1.),text=text)
     stl.write_col_table(first_time_local,duration_now,first_time_local+goal_duration)
+
+
+import pandas as pd
+import tabula as tb
+
+def from_csv_to_dataframe(label)->'DataFrame':
+    """Convert csv file which is from streamlit to DataFrame.
+
+    Args:
+        label (str): texts to show.
+
+    Returns:
+        DataFrame: A dataframe
+    """
+    if file := st.file_uploader(label=label,type="csv"):
+        return pd.read_csv(filepath_or_buffer=file)
+
+
+def from_pdf_to_dataframe(label,number=0)->'DataFrame':
+    if file := st.file_uploader(label=label,type="pdf"):
+        return tb.read_pdf(file)[number]
+
+def from_txt_to_dataframe(label,preprocess_function):
+    if text := st.text_area(label=label):
+        return preprocess_function(text)
