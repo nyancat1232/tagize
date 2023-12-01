@@ -57,11 +57,13 @@ def list_checkbox(*names):
 def list_text_inputs(label):
     amount = st.slider(label=label,min_value=1,max_value=100,value=1)
 
-    def gen_names(max_num):
+    def gen_names(current_label,max_num):
         cur_name=0
-        yield cur_name
+        ret = f'{current_label}_{cur_name}'
+        yield ret
         while (cur_name:=cur_name+1)<max_num:
-            yield cur_name
+            ret = f'{current_label}_{cur_name}'
+            yield ret
 
-    text_inputs = list_text_input_by_vals(*gen_names(amount))
+    text_inputs = list_text_input_by_vals(*gen_names(label,amount))
     return text_inputs
