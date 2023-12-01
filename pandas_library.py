@@ -15,6 +15,7 @@ class PDLibrary:
         self.data.loc[new_index] = init_var
         for column_name,column_val in col_val.items():
             self.data[column_name][new_index] = column_val
+    
 
 import streamlit as st
 
@@ -22,5 +23,9 @@ class PDLibrary_Streamlit(PDLibrary):
     def add_side_selects(self):
         for attr_name in self.data.columns:
             st.selectbox(label=attr_name,options=self.data[attr_name].unique())
+
+    def add_save_button(self,label):
+        st.download_button(label='download results',data=self.data.to_csv().encode('UTF-8'),file_name='result.csv',)
+        st.file_uploader()
 
     
