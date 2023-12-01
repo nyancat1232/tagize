@@ -52,3 +52,8 @@ def time_input_output(filename,label='blank'):
     if st.button(label=label):
         dio.save_time_direct(filename)
     return dio.load_time_direct(filename)
+
+def get_button_dataframe(label,column_name,value,dataframe,path,df_file):
+    if st.button(label=label):
+        dataframe[column_name] = value
+        dataframe.to_pickle(path+'/'+df_file)
