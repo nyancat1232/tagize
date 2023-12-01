@@ -29,3 +29,15 @@ def from_txt_to_dataframe(label,preprocess_function,**dataframe_keywords)->pd.Da
 def from_xlsx_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
     if file := st.file_uploader(label=label):
         return pd.read_excel(file,**dataframe_keywords)
+    
+def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
+    """Read a parquet file using a ßstrealit uploader
+
+    Args:
+        label (str): texts to show.
+
+    Returns:
+        DataFrame: A dataframe
+    """
+    if file := st.file_uploader(label=label,type="parquet"):
+        return pd.read_parquet(path=file,**dataframe_keywords)
