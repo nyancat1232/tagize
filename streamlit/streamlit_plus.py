@@ -55,8 +55,8 @@ def list_checkbox(*names):
     return {name : st.checkbox(label=name,value=False) for name in names}
 
 def list_text_inputs(label):
-    amount = st.slider(label=label,min_value=1,max_value=100,value=1)
-
+    row_amount = st.slider(label=f'{label}\'s row',min_value=1,max_value=100,value=1)
+    col_amount = st.slider(label=f'{label}\'s column',min_value=1,max_value=100,value=1)
     def gen_names(current_label,max_num):
         cur_name=0
         ret = f'{current_label}_{cur_name}'
@@ -65,5 +65,14 @@ def list_text_inputs(label):
             ret = f'{current_label}_{cur_name}'
             yield ret
 
-    text_inputs = list_text_input_by_vals(*gen_names(label,amount))
-    return text_inputs
+    input_data=[]
+    columns=st.columns(col_amount)
+    for col_ind, column in enumerate(columns):
+        with column:
+            row_data=[]
+            for row_ind in range(row_amount):
+                row_data.append(st.text_input(label=f'{label}\'s c{col_ind} r{row_ind}'))
+            input_data.append(row_data)
+    
+
+    return input_data
