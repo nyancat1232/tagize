@@ -26,9 +26,11 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
     df_default_values = get_default_value(schema_name,table_name,st_conn)
 
     exclude_columns=[]
+    key_for_checkbox=0
     if len(df_default_values.index)>0:
+        key_for_checkbox+=1
         st.subheader(f'select what you want to apply default')
-        exclude_columns=dict(map(lambda column_name:(column_name,st.checkbox(f'{column_name}',value=True)),df_default_values.index))
+        exclude_columns=dict(map(lambda column_name:(column_name,st.checkbox(f'{column_name}',value=True,key=f'{schema_name}.{table_name}.{column_name}.{key_for_checkbox}')),df_default_values.index))
         exclude_columns = dict(filter(lambda item:item[1],exclude_columns.items()))
         exclude_columns = list(map(lambda key:key,exclude_columns.keys()))
     
@@ -49,7 +51,7 @@ def r_d_sql(schema_name,table_name,st_conn,expand_column=True):
         #result_fk['_display']
         config_append_col[foreign_key] = st.column_config.SelectboxColumn(options=result_fk[uc])
 
-
+    result_to_append
     result_to_append = st.data_editor(result_to_append,num_rows="dynamic",hide_index=True,column_config=config_append_col)
     if st.button(f'upload {schema_name}.{table_name}'):
         result_to_append.to_sql(name=table_name,con=st_conn.connect(),schema=schema_name,index=False,if_exists='append')
