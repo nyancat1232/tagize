@@ -1,6 +1,6 @@
 import pandas as pd
 
-def read_from_server(schema_name:str,table_name:str,st_conn):
+def read_from_server(schema_name:str,table_name:str,st_conn, index:bool=False):
     with st_conn.connect() as conn_conn:
         return pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
 
