@@ -67,7 +67,7 @@ def from_parquet_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
 @dataclass
 class FileDescription:
     '''
-    How accepting files
+    methods how to read a file
     ## See Also:
     execute_file_descriptions
     ## Examples:
@@ -81,59 +81,64 @@ class FileDescription:
     dfs = execute_file_descriptions(fds)
     '''
     file_regex_str : str
-    dataframe_read_method : Callable
+    read_method : Callable
     var_name : Optional[str] = None
     dataframe_post_process : Optional[Callable] = None
-    dataframe_read_method_kwarg : Optional[Dict[Any,Any]] = None
+    read_method_kwarg : Optional[Dict[Any,Any]] = None
     dataframe_post_process_kwarg : Optional[Dict[Any,Any]]  = None
 
+class FileExecutor:
+    behaviors : List[FileDescription] = []
 
-def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False,label:str='multifiles test')->Dict[str,pd.DataFrame]:
-    '''
-    Accept multiple files and reads some files you want.
-    ## Parameters:
-    behaviors : Case that accept files.
-    show : Verbose. Show if accept files.
-    ## See Also:
-    ## Examples:
-    import pandas as pd
-    from typing import List
-    from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
+    def execute_file_descriptions(self,show:bool=False,label:str='multifiles test')->Dict[str,pd.DataFrame]:
+        '''
+        Accept multiple files and reads some files you want.
+        ## Parameters:
+        behaviors : Case that accept files.
+        show : Verbose. Show if accept files.
+        ## See Also:
+        ## Examples:
+        import pandas as pd
+        from typing import List
+        from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
 
-    fds : List[FileDescription]=[]
-    fds.append(FileDescription('^train.csv$',pd.read_csv))
-    fds.append(FileDescription('^codebook.csv$',pd.read_csv))
-    dfs = execute_file_descriptions(fds)
-    '''
-    
-    input_df={}
-    multi_files=st.file_uploader(label,accept_multiple_files=True)
-    for file in multi_files:
-        for behavior in behaviors:
-            if show:
-                st.write(re.compile(behavior.file_regex_str))
-                st.write(file.name)
-
-            if re.compile(normalize("NFC",behavior.file_regex_str)).match(normalize("NFC",file.name)) is not None:
-                if behavior.var_name:
-                    input_key = behavior.var_name
-                else:
-                    input_key = "_".join(file.name.split(".")[:-1])
-
+        fds : List[FileDescription]=[]
+        fds.append(FileDescription('^train.csv$',pd.read_csv))
+        fds.append(FileDescription('^codebook.csv$',pd.read_csv))
+        dfs = execute_file_descriptions(fds)
+        '''
+        
+        input_df={}
+        multi_files=st.file_uploader(label,accept_multiple_files=True)
+        for file in multi_files:
+            for behavior in self.behaviors:
                 if show:
-                    st.write(f"Assuming {file.name} is a {input_key}")
-                    
-                try:
-                    _temp_df = behavior.dataframe_read_method(file,**behavior.dataframe_read_method_kwarg)
-                except:
-                    _temp_df = behavior.dataframe_read_method(file)
-                
-                try:
-                    input_df[input_key] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
-                except:
-                    try:
-                        input_df[input_key] = behavior.dataframe_post_process(_temp_df)
-                    except:
-                        input_df[input_key] = _temp_df
+                    st.write(re.compile(behavior.file_regex_str))
+                    st.write(file.name)
 
-    return input_df
+                if re.compile(normalize("NFC",behavior.file_regex_str)).match(normalize("NFC",file.name)) is not None:
+                    if behavior.var_name:
+                        input_key = behavior.var_name
+                    else:
+                        input_key = "_".join(file.name.split(".")[:-1])
+
+                    if show:
+                        st.write(f"Assuming {file.name} is a {input_key}")
+                    
+                    try:
+                        _temp_df = behavior.read_method(file,**behavior.read_method_kwarg)
+                    except:
+                        try:
+                            _temp_df = behavior.read_method(file)
+                        except:
+                            continue
+                    
+                    try:
+                        input_df[input_key] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
+                    except:
+                        try:
+                            input_df[input_key] = behavior.dataframe_post_process(_temp_df)
+                        except:
+                            input_df[input_key] = _temp_df
+
+        return input_df
