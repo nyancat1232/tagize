@@ -51,7 +51,13 @@ def add_tab_func(func_list):
     return ret_func
 
 import pandas as pd
+import tabula as tb
 
 def from_csv_to_dataframe(label):
     if file := st.file_uploader(label=label,type="csv"):
         return pd.read_csv(filepath_or_buffer=file)
+
+
+def from_pdf_to_dataframe(label,number=0):
+    if file := st.file_uploader(label=label,type="pdf"):
+        return tb.read_pdf(file)[number]
