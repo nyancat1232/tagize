@@ -52,6 +52,17 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         df_result
     return df_result
 
+def get_columns(schema_name:str,table_name:str,st_conn):
+    sql = f'''SELECt column_name,data_type
+  FROM information_schema.columns
+ WHERE table_schema='{schema_name}'
+   AND table_name='{table_name}';
+    '''
+    with st_conn.connect() as con_con:
+        ret = pd.read_sql_query(sql,con=con_con)
+    
+        return ret.set_index('column_name')
+
 def get_foreign_keys(schema_name:str,table_name:str,st_conn):
     foreign_key_sql = f'''
     SELECT KCU.column_name AS current_column_name,
@@ -70,6 +81,15 @@ def get_foreign_keys(schema_name:str,table_name:str,st_conn):
         ret = pd.read_sql_query(foreign_key_sql,con=con_con).drop_duplicates()
     
         return ret.set_index('current_column_name')
+    
+def get_table_list(st_conn):
+    sql = f'''SELECT DISTINCT table_schema,table_name
+    FROM information_schema.table_constraints;
+    '''
+    with st_conn.connect() as con_con:
+        ret = pd.read_sql_query(sql,con=con_con)
+    
+        return ret
     
 def get_identity(schema_name:str,table_name:str,st_conn):
     sql = f'''SELECT attname as identity_column
@@ -101,6 +121,21 @@ def get_default_value(schema_name:str,table_name:str,st_conn):
     
         return ret.set_index('column_name')
     
+def create_empty_with_id_with_column(columns:dict,schema_name:str,table_name:str,st_conn):
+    additional_column=''
+    for column in reversed(columns.items()):
+        additional_column = ",".join([" ".join(column),additional_column])
+    sql = text(f'''CREATE TABLE IF NOT EXISTS {schema_name}.{table_name}
+        (
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+            {additional_column}
+            PRIMARY KEY (id)
+        );
+    ''')
+
+    with st_conn.connect() as session:
+        session.execute(sql)
+        session.commit()
 
       
 def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
