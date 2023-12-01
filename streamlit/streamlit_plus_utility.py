@@ -87,7 +87,7 @@ class FileDescription:
     dataframe_post_process_kwarg : Optional[Dict[Any,Any]]  = None
 
 
-def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False)->Dict[str,pd.DataFrame]:
+def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False,label:str='multifiles test')->Dict[str,pd.DataFrame]:
     '''
     Accept multiple files and reads some files you want.
     ## Parameters:
@@ -99,7 +99,7 @@ def execute_file_descriptions(behaviors : List[FileDescription],show:bool=False)
     '''
     
     input_df={}
-    multi_files=st.file_uploader('multifiles test',accept_multiple_files=True)
+    multi_files=st.file_uploader(label,accept_multiple_files=True)
     for file in multi_files:
         for behavior in behaviors:
             if show:
