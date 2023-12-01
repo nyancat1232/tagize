@@ -9,7 +9,11 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
     read a table form schema_name.table_name by using SQL query.
     ## Parameters:
     schema_name : str
-    schema for finding.
+    a schema name for finding a table.
+    table_name : str
+    a table name for finding a table.
+    st_conn : SQLconnection
+    a connection of streamlit.
     ## See Also:
     expand_foreign_column
     ## Examples:
@@ -28,7 +32,11 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     function of read_from_server as expanded column of foreign key
     ## Parameters:
     schema_name : str
-    
+    a schema name for finding a table.
+    table_name : str
+    a table name for finding a table.
+    st_conn : SQLconnection
+    a connection of streamlit.
     ## See Also:
     read_from_server
     ## Examples:
@@ -64,6 +72,26 @@ def get_columns(schema_name:str,table_name:str,st_conn):
         return ret.set_index('column_name')
 
 def get_foreign_keys(schema_name:str,table_name:str,st_conn):
+    '''
+    get foreign key of a table
+    ## Parameters:
+    schema_name : str
+    a schema name for finding a table.
+    table_name : str
+    a table name for finding a table.
+    st_conn : SQLconnection
+    a connection of streamlit.
+    ## See Also:
+    (sa_description)
+    ## Examples:
+    import streamlit as st
+    from pyplus.sql.pgplus import get_foreign_keys
+
+    conn = st.connection(name='postgresql',type='sql')
+
+    df_fks = get_foreign_keys(schema_name='<<your schema>>',table_name='<<your table>>',st_conn=conn)
+    df_fks
+    '''
     foreign_key_sql = f'''
     SELECT KCU.column_name AS current_column_name,
         CCU.table_schema AS upper_schema, 
@@ -87,7 +115,7 @@ def get_table_list(st_conn):
     Get table list in a database.
     ## Parameters:
     st_conn : SQLconnection
-    .
+    a connection of streamlit.
     ## See Also:
     
     ## Examples:
