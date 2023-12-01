@@ -3,6 +3,13 @@ from datetime import datetime
 
 def column_to_int_type(df_column):
     df_column=df_column.str.split(' |-|:')
-    df_column=df_column.apply(lambda l:[int(s) for s in l])
-    df_column=df_column.apply(lambda l:datetime(*l))
+
+    def _apply_func(element):
+        if type(element) == list:
+            temp = [int(si) for si in element]
+            return datetime(*temp)
+        else:
+            return None
+    
+    df_column=df_column.apply(lambda s:_apply_func(s))
     return df_column
