@@ -28,3 +28,6 @@ def transpose_list(list_in,default_val=None):
         for l in list_temp:
             l.append(default_val)
     return list(map(list, zip(*list_temp)))
+
+def split_list_by_key(list_key,list_in):
+    return {key: list_in[ind::len(list_key)] for ind,key in enumerate(list_key)}
