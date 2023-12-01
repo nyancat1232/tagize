@@ -47,17 +47,21 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     >>>> df_pivot_list = expand_foreign_column(schema_name='study',table_name='event',st_conn=conn)
     >>>> df_pivot_list
     '''
+
     df_result=read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
+
     fks=get_foreign_keys(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
     for foreign_key_index,foreign_key_series in fks.iterrows():
         df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn)
+
+        df_right[foreign_key_series['upper_column_name']] = df_right[foreign_key_series['upper_column_name']].astype('object')
+
         temporary_replace_duplicate_name=f"__temp__{foreign_key_series['upper_column_name']}"
         if foreign_key_series['upper_column_name'] in df_result.columns:
             df_result=df_result.rename(columns={foreign_key_series['upper_column_name']:temporary_replace_duplicate_name})
-        df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[foreign_key_series['upper_column_name']],how='inner')
+        df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[foreign_key_series['upper_column_name']],how='left')
         df_result=df_result.drop(columns=['key_0',foreign_key_index,foreign_key_series['upper_column_name']])
         df_result=df_result.rename(columns={temporary_replace_duplicate_name:foreign_key_series['upper_column_name']})
-        df_result
     return df_result
 
 def get_foreign_id_table(to_column:str,schema_name:str,table_name:str,st_conn):
