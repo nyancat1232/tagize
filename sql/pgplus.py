@@ -60,6 +60,30 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         df_result
     return df_result
 
+def get_foreign_id_table(to_column:str,schema_name:str,table_name:str,st_conn):
+    '''
+    ## Examples:
+    >> id foreign_id
+    >> 1 2
+    >> 2 3
+
+    >> foreign_id name age
+    >> 1 a 1
+    >> 2 b 11
+    >> 3 c 111
+
+    result
+    >> {
+        2:b,
+        3:c,
+    }
+    '''
+    fks=get_foreign_keys(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
+    for _,foreign_key_series in fks.iterrows():
+        df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn)
+        df_result = df_right[[foreign_key_series['upper_column_name'],to_column]]
+    return df_result
+
 def get_columns(schema_name:str,table_name:str,st_conn):
     sql = f'''SELECt column_name,data_type
   FROM information_schema.columns
