@@ -57,3 +57,10 @@ def get_button_dataframe(label,column_name,value,dataframe,path,df_file):
     if st.button(label=label):
         dataframe[column_name] = value
         dataframe.to_pickle(path+'/'+df_file)
+
+def write_tabs(names,funcs):
+    tabs = st.tabs(names)
+    tabs_func = funcs
+    for tab,tab_func in zip(tabs,tabs_func):
+        with tab:
+            tab_func()
