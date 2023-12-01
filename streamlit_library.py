@@ -10,15 +10,16 @@ def dec_func(old_func):
         st.divider()
     return new_func
 
-def write_col_table(*column_data):
-    column_length = len(column_data)
-    column_table = st.columns(column_length)
+def write_col_table(*positional_data,**keyword_data):
+    column_table = st.columns(len(positional_data)+len(keyword_data))
 
-    for column in range(column_length):
-        with column_table[column]:
-            st.write(column_data[column])
+    total_data = dict(enumerate(positional_data))
+    total_data.update(keyword_data)
 
-    return column_data
+    for index,key in enumerate(total_data):
+        with column_table[index]:
+            st.write(key)
+            st.write(total_data[key])
 
 def write_col_eval(sstr_eval,globs=None):
     globs = globs.copy()
@@ -59,6 +60,7 @@ def write_tabs(*funcs,names=None):
 
 def add_func(func_list):
     '''Decoration for write_tabs
+    func_list => which collects a function.
     '''
     def ret_func(func):
         func_list.append(func)
