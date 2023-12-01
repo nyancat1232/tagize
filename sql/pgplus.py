@@ -180,6 +180,35 @@ def create_empty_with_id_with_column(columns:dict,schema_name:str,table_name:str
 
       
 def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
+    '''
+    append a dataframe to database by using df.to_sql.
+    ## Parameters:
+    df : pd.DataFrame
+    a dataframe to append.
+    ## Examples:
+    import streamlit as st
+    import pandas as pd
+
+    >public.test
+    >  A B
+    >  1 2
+    >  3 4
+
+    conn = st.connection(name='postgresql',type='sql')
+    df = pd.DataFrame({'A':[5,6],'B':[7,8]})
+
+    write_to_server(df,'public','test',conn)
+
+
+    >public.test
+    >  A B
+    >  1 2
+    >  3 4
+    >  5 7
+    >  6 8
+
+
+    '''
     with st_conn.connect() as conn_conn:
         return df.to_sql(name=table_name,con=conn_conn,schema=schema_name,if_exists='append',index=False)
 
