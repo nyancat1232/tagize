@@ -7,7 +7,7 @@ def divide(old_func):
         st.divider()
     return new_func
 
-def write_col_table(*positional_data,**keyword_data):
+def write_columns(*positional_data,**keyword_data):
     if len(positional_data)+len(keyword_data)<1:
         st.write('No arguments')
         return
