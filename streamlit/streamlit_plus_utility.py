@@ -76,9 +76,9 @@ def do_behavior_of_multiple_files_old(behaviors):
 class FileDescription:
     file_regex : re
     var_name : str
-    dataframe_pre_process : Callable
+    dataframe_read_method : Callable
     dataframe_post_process : Optional[Callable] = None
-    dataframe_pre_process_kwarg : Optional[Dict[Any,Any]] = None
+    dataframe_read_method_kwarg : Optional[Dict[Any,Any]] = None
     dataframe_post_process_kwarg : Optional[Dict[Any,Any]]  = None
 
 
@@ -91,9 +91,9 @@ def execute_file_descriptions(behaviors : List[FileDescription])->Dict[str,pd.Da
             if behavior.file_regex.match(file.name) is not None:
                 st.write(f"Assuming {file.name} is a {behavior.var_name}")
                 try:
-                    _temp_df = behavior.dataframe_pre_process(file,**behavior.dataframe_pre_process_kwarg)
+                    _temp_df = behavior.dataframe_read_method(file,**behavior.dataframe_read_method_kwarg)
                 except:
-                    _temp_df = behavior.dataframe_pre_process(file)
+                    _temp_df = behavior.dataframe_read_method(file)
                 
                 try:
                     input_df[behavior.var_name] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
