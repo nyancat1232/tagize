@@ -6,15 +6,31 @@ from typing import Callable,Dict,Any,List,Optional
 import re
 from unicodedata import normalize
 
-def from_csv_to_dataframe(label,**dataframe_keywords)->pd.DataFrame:
+def from_csv_to_dataframe(label:str,**dataframe_keywords)->pd.DataFrame:
     """Read a csv file using a ßstrealit uploader
 
     Args:
         label (str): texts to show.
-
+    A short label explaining to the user what this file uploader is for. The label can optionally contain Markdown and supports the following
     Returns:
         DataFrame: A dataframe
     """
+    '''
+    Read a csv file using a ßstrealit uploader
+    ## Parameters:
+    label : str
+    A short label explaining to the user what this file uploader is for. The label can optionally contain Markdown and supports the following (from streamlit==1.28.1 docstring)
+    dataframe_keywords : keywords of pd.Dataframe
+    keyword arguments for initializing pd.Dataframe
+    ## See Also:
+    from_pdf_to_dataframe
+    from_txt_to_dataframe
+    from_xls_to_dataframe
+    from_parquet_to_dataframe
+    ## Examples:
+    
+    '''
+
     if file := st.file_uploader(label=label,type="csv"):
         return pd.read_csv(filepath_or_buffer=file,**dataframe_keywords)
 
