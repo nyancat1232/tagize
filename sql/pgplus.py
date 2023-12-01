@@ -5,6 +5,21 @@ DO NOT USE AS PUBLIC.
 '''
 
 def read_from_server(schema_name:str,table_name:str,st_conn):
+    '''
+    read a table form schema_name.table_name by using SQL query.
+    ## Parameters:
+    schema_name : str
+    schema for finding.
+    ## See Also:
+    expand_foreign_column
+    ## Examples:
+    >>>> import streamlit as st
+    >>>> from pyplus.sql.pgplus import expand_foreign_column
+    >>>> 
+    >>>> conn=st.connection('postgresql',type='sql')
+    >>>> df_pivot_list = read_from_server(schema_name='study',table_name='event',st_conn=conn)
+    >>>> df_pivot_list
+    '''
     with st_conn.connect() as conn_conn:
         return pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
 
@@ -17,9 +32,12 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     ## See Also:
     read_from_server
     ## Examples:
-        
-    conn=st.connection('postgresql',type='sql')
-    df_sleep = expand_foreign_column(schema_name='public',table_name='sleep',st_conn=conn)
+    >>>> import streamlit as st
+    >>>> from pyplus.sql.pgplus import expand_foreign_column
+    >>>> 
+    >>>> conn=st.connection('postgresql',type='sql')
+    >>>> df_pivot_list = expand_foreign_column(schema_name='study',table_name='event',st_conn=conn)
+    >>>> df_pivot_list
     '''
     df_result=read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
     fks=get_foreign_keys(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
