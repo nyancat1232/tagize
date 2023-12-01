@@ -1,29 +1,51 @@
 import pandas as pd
+import numpy as np
+from datetime import dateime
+from . import streamlit_library as stlt
+import pytz
 
 class PDLibrary:
-    data = pd.DataFrame()
-    def __init__(self,path_or_buffer,init_val=0,*columns_name):
-        self.data = pd.read_csv(path_or_buffer)
-        self.initialize_attribute(init_val,*columns_name)
+    _data = pd.DataFrame()
+    _path = ''
 
-    def initialize_attribute(self,init_val,*columns_name):
-        for column_name in columns_name:
-            if column_name not in self.data:
-                self.data[column_name] = init_val
+    def __init__(self,path,*columns_name,index_col='',init_val=np.nan):
+        self._path = path
+        try:
+            self._data = pd.read_csv(self._path,index_col=index_col,usecols=columns_name)
+        except FileNotFoundError:
+            self._data = pd.DataFrame(columns=columns_name)
+            self._data.set_index(index_col)
+            self._data.to_csv(path_or_buf = self._path)
 
-    def append_data(self,new_index='recent',init_var='',**col_val):
-        self.data.loc[new_index] = init_var
+    def append_data(self,new_index=None,init_var=np.nan,**col_val):
+        if new_index is None:
+            new_index = datetime.utcnow().strftime("%F %T")
+        
+        self._data.loc[new_index] = np.nan
         for column_name,column_val in col_val.items():
-            self.data[column_name][new_index] = column_val
+            self._data[column_name][new_index] = column_val
+
+    def save_data(self):
+        self._data.to_csv(path_or_buf=self._path)
     
 
 import streamlit as st
 
 class PDLibrary_Streamlit(PDLibrary):
     def add_side_selects(self):
-        for attr_name in self.data.columns:
-            st.selectbox(label=attr_name,options=self.data[attr_name].unique())
+        for attr_name in self._data.columns:
+            st.selectbox(label=attr_name,options=self._data[attr_name].unique())
 
+    def add_save_download_button(self,label):
+        st.download_button(label=label,data=self._data.to_csv().encode('UTF-8'),file_name='result.csv',)
+    
+    def append_and_save_data(self,label,**column_data):
+        if st.button(label=label):
+            self.append_data(**column_data)
+            self.save_data()
+    
+    def show_data(self):
+        st.dataframe(self._data)
     def add_save_button(self,label):
         st.download_button(label='download results',data=self.data.to_csv().encode('UTF-8'),file_name='result.csv',)
         st.file_uploader()
