@@ -26,7 +26,7 @@ def write_tabs(*funcs,names=None):
     from amesho import streamlit_library as stl
 
     func_list=[]
-    @stl.add_func(func_list):
+    @stl.add_tab_func(func_list):
     def func_name():
         pass
     stl.write_tabs(*func_list)
@@ -41,7 +41,7 @@ def write_tabs(*funcs,names=None):
         with tab:
             tab_func()
 
-def add_func(func_list):
+def add_tab_func(func_list):
     '''Decoration for write_tabs
     func_list => which collects a function.
     '''
