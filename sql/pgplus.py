@@ -8,7 +8,7 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
     
 def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
     with st_conn.connect() as conn_conn:
-        return df.to_sql(name=table_name,con=conn_conn,schema=schema_name)
+        return df.to_sql(name=table_name,con=conn_conn,schema=schema_name,if_exists='append',index=False)
     
 def write_to_server_replace(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
     with st_conn.session as session:
