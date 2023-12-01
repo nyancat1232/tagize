@@ -4,9 +4,20 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
     with st_conn.connect() as conn_conn:
         return pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
     
-def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn,if_exist='append'):
+def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
     with st_conn.connect() as conn_conn:
-        return df.to_sql(name=table_name,con=conn_conn,schema=schema_name,if_exists=if_exist)
+        return df.to_sql(name=table_name,con=conn_conn,schema=schema_name)
+    
+def write_to_server_replace(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
+    with st_conn.connect() as conn_conn:
+        delete_sql = f'''
+            DELETE FROM {schema_name}.{table_name};
+        '''
+        try:
+          conn_conn.execute(delete_sql)
+        except:
+          pass #Nothing to delete
+        return df.to_sql(name=table_name,con=conn_conn,schema=schema_name,if_exists='append')
 
 def get_foreign_keys(schema:str,table:str,conn):
     foreign_key_sql = f'''
