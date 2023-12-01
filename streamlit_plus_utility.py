@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import pytz
-from . import streamlit_library as stl
+from . import streamlit_plus as stl
 
 def url_analyzer(url):
     temp = "?"
