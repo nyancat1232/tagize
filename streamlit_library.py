@@ -10,27 +10,16 @@ def dec_func(old_func):
         st.divider()
     return new_func
 
-def write_col_table(*column_data):
-    column_length = len(column_data)
-    column_table = st.columns(column_length)
+def write_col_table(*positional_data,**keyword_data):
+    column_table = st.columns(len(positional_data)+len(keyword_data))
 
-    for column in range(column_length):
-        with column_table[column]:
-            st.write(column_data[column])
+    total_data = dict(enumerate(positional_data))
+    total_data.update(keyword_data)
 
-    return column_data
-
-def write_col_eval(sstr_eval,globs=None):
-    globs = globs.copy()
-    daa = sstr_eval.split('\n')
-    filtered_globals = {key:value for key,value in zip(globs.keys(),globs.values() ) if key.find("__") == -1 }
-
-    daa_eval = [eval(l,filtered_globals) for l in daa]
-
-    st.divider()
-    write_col_table(*daa)
-    write_col_table(*daa_eval)
-    st.divider()
+    for index,key in enumerate(total_data):
+        with column_table[index]:
+            st.write(key)
+            st.write(total_data[key])
 
 def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="blank"):
 
@@ -49,10 +38,18 @@ def time_show(first_time,max_hour_duration,current_time,timezone="UTC",text="bla
 
 def write_tabs(*funcs,names=None):
     if names is None:
-        names = [f'col {num}' for num in range(len(funcs))]
+        names = [f'{num} : {funcs[num].__name__}' for num in range(len(funcs))]
 
     tabs = st.tabs(names)
     tabs_func = funcs
     for tab,tab_func in zip(tabs,tabs_func):
         with tab:
             tab_func()
+
+def add_func(func_list):
+    '''Decoration for write_tabs
+    func_list => which collects a function.
+    '''
+    def ret_func(func):
+        func_list.append(func)
+    return ret_func
