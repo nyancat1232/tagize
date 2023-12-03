@@ -39,7 +39,12 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
     >>>> df_pivot_list
     '''
     with st_conn.connect() as conn_conn:
-        return pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
+        result = pd.read_sql_table(table_name=table_name,con=conn_conn,schema=schema_name)
+        identity = get_identity(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
+
+        result = result.set_index(identity.to_list())
+        result = result.sort_index(ascending=False)
+        return result
 
 def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     '''
