@@ -80,7 +80,10 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         if foreign_key_series['upper_column_name'] in df_result.columns:
             df_result=df_result.rename(columns={foreign_key_series['upper_column_name']:temporary_replace_duplicate_name})
         df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[foreign_key_series['upper_column_name']],how='left')
-        df_result=df_result.drop(columns=['key_0',foreign_key_index,foreign_key_series['upper_column_name']])
+        try:
+            df_result=df_result.drop(columns=['key_0',foreign_key_index,foreign_key_series['upper_column_name']])
+        except:
+            'no rows in foreign keys'
         df_result=df_result.rename(columns={temporary_replace_duplicate_name:foreign_key_series['upper_column_name']})
     return df_result.set_index(index_name)
 
