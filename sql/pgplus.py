@@ -68,10 +68,11 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     '''
 
     df_result=read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
-
+    index_name=df_result.index.name
+    df_result=df_result.reset_index()
     fks=get_foreign_keys(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
     for foreign_key_index,foreign_key_series in fks.iterrows():
-        df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn)
+        df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn).reset_index()
 
         df_right[foreign_key_series['upper_column_name']] = df_right[foreign_key_series['upper_column_name']].astype('object')
 
@@ -81,7 +82,7 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[foreign_key_series['upper_column_name']],how='left')
         df_result=df_result.drop(columns=['key_0',foreign_key_index,foreign_key_series['upper_column_name']])
         df_result=df_result.rename(columns={temporary_replace_duplicate_name:foreign_key_series['upper_column_name']})
-    return df_result
+    return df_result.set_index(index_name)
 
 def get_foreign_id_table(to_column:str,schema_name:str,table_name:str,st_conn):
     '''
