@@ -1,8 +1,22 @@
 import pandas as pd
 from sqlalchemy.sql import text
+
+def get_identity(schema_name:str,table_name:str,st_conn):
+    sql = f'''SELECT attname as identity_column
+  FROM pg_attribute 
+  JOIN pg_class 
+    ON pg_attribute.attrelid = pg_class.oid
+  JOIN pg_namespace
+    ON pg_class.relnamespace = pg_namespace.oid
+ WHERE nspname = '{schema_name}'
+   AND relname = '{table_name}'
+   AND attidentity = 'a';
 '''
-DO NOT USE AS PUBLIC. 
-'''
+    
+    with st_conn.connect() as con_con:
+        ret = pd.read_sql_query(sql,con=con_con)
+    
+        return ret['identity_column']
 
 def read_from_server(schema_name:str,table_name:str,st_conn):
     '''
@@ -161,23 +175,6 @@ def get_table_list(st_conn):
         ret = pd.read_sql_query(sql,con=con_con)
     
         return ret
-    
-def get_identity(schema_name:str,table_name:str,st_conn):
-    sql = f'''SELECT attname as identity_column
-  FROM pg_attribute 
-  JOIN pg_class 
-    ON pg_attribute.attrelid = pg_class.oid
-  JOIN pg_namespace
-    ON pg_class.relnamespace = pg_namespace.oid
- WHERE nspname = '{schema_name}'
-   AND relname = '{table_name}'
-   AND attidentity = 'a';
-'''
-    
-    with st_conn.connect() as con_con:
-        ret = pd.read_sql_query(sql,con=con_con)
-    
-        return ret['identity_column']
     
 def get_default_value(schema_name:str,table_name:str,st_conn):
     sql = f'''SELECT column_name, column_default
