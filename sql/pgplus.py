@@ -210,6 +210,23 @@ def create_empty_with_id_with_column(columns:dict,schema_name:str,table_name:str
         session.execute(sql)
         session.commit()
 
+def create_columns(columns:dict,schema_name:str,table_name:str,st_conn):
+    additional_column=''
+    for column in reversed(columns.items()):
+        if len(columns)>1:
+            additional_column = ",".join([" ".join(column),additional_column])
+        else:
+            additional_column = " ".join(column)
+
+
+    sql = text(f'''ALTER TABLE  {schema_name}.{table_name}
+  ADD COLUMN {additional_column};
+    ''')
+
+    with st_conn.connect() as session:
+        session.execute(sql)
+        session.commit()
+
       
 def write_to_server(df:pd.DataFrame,schema_name:str,table_name:str,st_conn):
     '''
