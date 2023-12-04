@@ -291,3 +291,45 @@ def upload_to_sql_by_value(schema_name,table_name,st_conn,select_column,select_v
     with st_conn.session as session:
         session.execute(update_query)
         session.commit()
+
+def upload_to_sql_by_id(df:pd.DataFrame,schema_name,table_name,st_conn,id_row):
+    '''
+    Upload by id.
+    
+    ## Examples:
+    
+    >current aaaa.bbbb in db
+    > aaaa.bbbb
+    >    a  b  c
+    > 0  2  0  0
+    > 1  0  0  0
+
+    conn = st.connection(...)
+
+    df = pd.DataFrame(...)
+    df
+    >    a  b  c
+    > 0  1  2  3
+    > 1  4  5  6
+
+    upload_to_sql_by_value(df,aaaa,bbbb,conn,0)
+
+    > aaaa.bbbb
+    >    a  b  c
+    > 0  1  2  3
+    > 1  0  0  0
+    '''
+    id_column = get_identity(schema_name,table_name,st_conn).to_list()[0]
+
+    original=df.copy().loc[id_row].to_dict()
+    original=",".join(["=".join([key,f"'{str(original[key])}'"]) for key in original])
+
+    update_query = text(f"""
+    UPDATE {schema_name}.{table_name}
+    SET {original}
+    WHERE {id_column} = {id_row};
+    """)
+    
+    with st_conn.session as session:
+        session.execute(update_query)
+        session.commit()
