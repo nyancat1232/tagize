@@ -107,7 +107,7 @@ def get_foreign_id_table(to_column:str,schema_name:str,table_name:str,st_conn):
     '''
     fks=get_foreign_keys(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
     for _,foreign_key_series in fks.iterrows():
-        df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn)
+        df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn).reset_index()
         df_result = df_right[[foreign_key_series['upper_column_name'],to_column]]
 
     df_result = {v: k for k, v in zip(df_result[foreign_key_series['upper_column_name']],df_result[to_column])}
