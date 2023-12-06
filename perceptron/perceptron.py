@@ -37,8 +37,8 @@ class Node:
                 elem=in_forward
             temp.append(elem)
         return temp
-
-    def forward(self) -> float:
+    
+    def refresh_out_previous(self):
         temp=[]
         for in_forward in self.ins_forward:
             try:
@@ -46,12 +46,53 @@ class Node:
             except:
                 elem=in_forward
             temp.append(elem)
+        return temp
+
+    def forward(self) -> float:
+        '''
+        calculate from input to output
+        ## See Also:
+        backward
+        ## Examples:
+        ...
+
+model_1 = Mult()
+model_1.connect_previous_node(3)
+model_1.connect_previous_node(2)
+model_1.forward()
+> 6
+...
+        '''
+        temp=self.refresh_out_previous()
 
         self.out_forward=self._forw_func(temp)
         return self.out_forward
     
         
     def backward(self) -> List[float]:
+        '''
+        reflect partial derivation from output to each input
+        ## See Also:
+        backward
+        ## Examples:
+            >3\n
+            >_x_6\n
+            >2\n
+            >____+_2\n
+            >__-4\n
+\n
+            model_1 = Mult()\n
+            model_1.connect_previous_node(3.)\n
+            model_1.connect_previous_node(2.)\n
+            model_2 = Add()\n
+            model_2.connect_previous_node(model_1)\n
+            model_2.connect_previous_node(-4.)\n
+            model_2.forward()\n
+            model_2.backward()\n
+            backpropagation_result_of_model_1=model_1.backward()\n
+            backpropagation_result_of_model_1
+            > [4,6]
+        '''
         if self.is_terminal():
             self.ins_backward= self._back_func(self.out_forward,self.get_shallow_ins())
         else:
@@ -65,8 +106,8 @@ class Node:
     def summary(self):
         return f'''\n
         {"forward_line":_>20.20} {"backward_line":_>20.20}\n
-        {str(self.ins_forward):_>20.20} {str(self.ins_backward):_>20.20}\n
-        {str(self.out_forward):_>40.40} {str(self.out_backward):_>40.40} {str(self.out_backward_address):_>20.20}\n
+        {str(self.get_shallow_ins()):_>20.20} {str(self.ins_backward):_>20.20}\n
+        {str(self.out_forward):_>20.40} {str(self.out_backward):_>20.40} {str(self.out_backward_address):_>20.20}\n
         '''
 
 @dataclass
