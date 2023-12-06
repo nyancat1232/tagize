@@ -11,10 +11,12 @@ class Node:
     out_backward : Self = None
     out_backward_address : int = -1
 
-    
+    _single_input=False
 
 
     def connect_previous_node(self:Self,previous_node:Self):
+        if self._single_input and len(self.ins_forward):
+            raise "Cannot add more than one input."
         try:
             previous_node.out_backward_address = len(self.ins_backward)
         except:
@@ -151,6 +153,16 @@ class Mult(Node):
             rr.append(prod*out_back)
         return rr
 
+@dataclass
+class Inv(Node):
+    _symbol = '_/'
+    _single_input = True
+
+    def _forw_func(self,arr):
+        return 1./arr[0]
+    def _back_func(self,out_back,ins_shallow_forw):
+        return out_back*-1./(ins_shallow_forw[0]**2)
+    
 
 # y=ax+b, x=1,y=3
 # a<-random
