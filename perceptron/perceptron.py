@@ -38,7 +38,7 @@ class Node:
             temp.append(elem)
         return temp
     
-    def refresh_out_previous(self):
+    def _refresh_out_previous(self):
         temp=[]
         for in_forward in self.ins_forward:
             try:
@@ -63,7 +63,7 @@ model_1.forward()
 > 6
 ...
         '''
-        temp=self.refresh_out_previous()
+        temp=self._refresh_out_previous()
 
         self.out_forward=self._forw_func(temp)
         return self.out_forward
