@@ -38,7 +38,7 @@ class Node:
             temp.append(elem)
         return temp
 
-    def forward(self):
+    def forward(self) -> float:
         temp=[]
         for in_forward in self.ins_forward:
             try:
@@ -51,7 +51,7 @@ class Node:
         return self.out_forward
     
         
-    def backward(self):
+    def backward(self) -> List[float]:
         if self.is_terminal():
             self.ins_backward= self._back_func(self.out_forward,self.get_shallow_ins())
         else:
