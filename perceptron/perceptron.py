@@ -112,9 +112,9 @@ model_1.forward()
     
     def summary_python_code(self,count=0):
         line=[]
-        for in_forward in self.ins_forward:
+        for index,in_forward in enumerate(self.ins_forward):
             try:
-                line.append(f"temp{count+1} = "+in_forward.summary_python_code(count+1)+f"\ntemp{count} = temp{count+1}")
+                line.append(f"temp{index}{count+1} = "+in_forward.summary_python_code(count+1)+f"\ntemp{index}{count} = temp{index}{count+1}")
             except:
                 line.append(str(in_forward))
         return f'{self._symbol.join(line)}'
