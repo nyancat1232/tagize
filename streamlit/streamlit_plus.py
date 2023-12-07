@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
-
+from typing import Sequence
+from dataclasses import dataclass
 
 def divide(old_func):
     def new_func(*parg,**kwarg):
@@ -49,30 +50,33 @@ def write_columns(*positional_data,**keyword_data):
             st.write(key)
             st.write(total_data[key])
 
-def write_tabs(*funcs,names=None):
+
+class TabsPlus:
     '''
-    from amesho import streamlit_library as stl
+    st.tabs (in streamlit) with reading of text input
+    ## See Also:
+    st.tabs
+    ## Examples:
+    >tabs = TabsPlus(['apple','banana'])
+    >with tabs['apple']:
+    >    ...
 
-    func_list=[]
-    @stl.add_tab_func(func_list):
-    def func_name():
-        pass
-    stl.write_tabs(*func_list)
-
+    is eqaul to
+    >tabs = st.tabs(['apple','banana'])
+    >with tabs[0]:
+    >    ...
     '''
-    if names is None:
-        names = [f'{funcs[num].__name__}' for num in range(len(funcs))]
+    def __init__(self,tabs: Sequence[str]):
+        tab_information={tab_str:ind for ind,tab_str in enumerate(tabs)}
+        self._streamlit_tabs = st.tabs(tab_information)
+        self._tab_ind = tab_information
 
-    tabs = st.tabs(names)
-    tabs_func = funcs
-    for tab,tab_func in zip(tabs,tabs_func):
-        with tab:
-            tab_func()
+    def __getitem__(self,item):
+        return self._streamlit_tabs[self._tab_ind[item]]
 
-def add_tab_func(func_list):
-    def ret_func(func):
-        func_list.append(func)
-    return ret_func
+
+
+
 
 
 def list_text_input_by_vals(*attribute_list,**kwarg_text_input):
