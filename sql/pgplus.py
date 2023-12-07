@@ -292,7 +292,7 @@ def upload_to_sql_by_value(schema_name,table_name,st_conn,select_column,select_v
         session.execute(update_query)
         session.commit()
 
-def upload_to_sql_by_id(df:pd.DataFrame,schema_name,table_name,st_conn,id_row):
+def upload_to_sql_by_id(sr:pd.Series,schema_name,table_name,st_conn,id_row):
     '''
     Upload by id.
     
@@ -321,7 +321,7 @@ def upload_to_sql_by_id(df:pd.DataFrame,schema_name,table_name,st_conn,id_row):
     '''
     id_column = get_identity(schema_name,table_name,st_conn).to_list()[0]
 
-    original=df.copy().loc[id_row].to_dict()
+    original=sr.copy().to_dict()
     original=",".join(["=".join([key,f"'{str(original[key])}'"]) for key in original])
 
     update_query = text(f"""
