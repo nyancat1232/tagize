@@ -109,11 +109,24 @@ model_1.forward()
         return self.out_backward is None
 
     def summary(self):
-        return f'''\n
-        {"forward_line":_>20.20} {"backward_line":_>20.20}\n
-        {str(self.get_shallow_ins()):_>20.20} {str(self.ins_backward):_>20.20}\n
-        {str(self.out_forward):_>20.40} {str(self.out_backward):_>20.40} {str(self.out_backward_address):_>20.20}\n
-        '''
+        fill_padding_lines=4
+
+        lines = ['' for l in range(len(self.ins_forward)*fill_padding_lines)]
+        for line_ind,v in enumerate(zip(self.ins_forward,self.ins_backward)):
+            lines[line_ind*fill_padding_lines] += str(v[0]) + '-'*10
+            lines[line_ind*fill_padding_lines+1] += ' '*5+str(v[1])+ ' '*4+'|'*1
+            lines[line_ind*fill_padding_lines+2] += ' '*3+ ' '*9
+            if line_ind < fill_padding_lines*(len(self.ins_forward)-1)-1:
+                lines[line_ind*fill_padding_lines+2] += '|'*1
+        lines[0]+='-'*4+"("+self._symbol+')'+'-'*5
+        lines[0]+=str(self.out_forward)
+        ret = "\n".join(lines)
+        return ret
+        #return f'''\n
+        #{"forward_line":_>20.20} {"backward_line":_>20.20}\n
+        #{str(self.get_shallow_ins()):_>20.20} {str(self.ins_backward):_>20.20}\n
+        #{str(self.out_forward):_>20.40} {str(self.out_backward):_>20.40} {str(self.out_backward_address):_>20.20}\n
+        #'''
     
     def summary_python_code(self,count=0):
         line=[]
