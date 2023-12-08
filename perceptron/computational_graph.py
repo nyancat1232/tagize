@@ -6,15 +6,17 @@ class Node:
     learning_rate : float = 0.01
 
     ins_forward : List[Union[float,Self]] = field(default_factory=list)
+    ins_is_parameter : List[bool] = field(default_factory=list)
     ins_backward : List[float] = field(default_factory=list)
     out_forward : float = 0.0
     out_backward : Self = None
     out_backward_address : int = -1
 
+
     _single_input=False
 
 
-    def connect_previous_node(self:Self,previous_node:Self):
+    def connect_previous_node(self:Self,previous_node:Self,is_a_parameter=False):
         if self._single_input and len(self.ins_forward):
             raise "Cannot add more than one input."
         try:
@@ -23,6 +25,7 @@ class Node:
             pass
 
         self.ins_forward.append(previous_node)
+        self.ins_is_parameter.append(is_a_parameter)
         self.ins_backward.append(0.0)
         try:
             previous_node.out_forward = 0.0
