@@ -112,7 +112,9 @@ model_1.forward()
         fill_padding_lines=4
 
         lines = ['' for l in range(len(self.ins_forward)*fill_padding_lines)]
-        for line_ind,v in enumerate(zip(self.get_shallow_ins(),self.ins_backward)):
+        for line_ind,v in enumerate(zip(self.get_shallow_ins(),self.ins_backward,self.ins_is_parameter)):
+            if v[2]:
+                lines[line_ind*fill_padding_lines] += '*'
             lines[line_ind*fill_padding_lines] += str(v[0]) + '-'*10
             lines[line_ind*fill_padding_lines+1] += ' '*5+str(v[1])+ ' '*4+'|'*1
             lines[line_ind*fill_padding_lines+2] += ' '*3+ ' '*9
