@@ -122,12 +122,7 @@ model_1.forward()
         lines[0]+=str(self.out_forward)
         ret = "\n".join(lines)
         return ret
-        #return f'''\n
-        #{"forward_line":_>20.20} {"backward_line":_>20.20}\n
-        #{str(self.get_shallow_ins()):_>20.20} {str(self.ins_backward):_>20.20}\n
-        #{str(self.out_forward):_>20.40} {str(self.out_backward):_>20.40} {str(self.out_backward_address):_>20.20}\n
-        #'''
-    
+
     def summary_python_code(self,count=0):
         line=[]
         for index,in_forward in enumerate(self.ins_forward):
