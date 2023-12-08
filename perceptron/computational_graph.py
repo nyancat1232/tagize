@@ -74,7 +74,7 @@ model_1.forward()
         return self.out_forward
     
         
-    def refresh_gradient(self) -> List[float]:
+    def backward(self) -> List[float]:
         '''
         reflect partial derivation from output to each input
         ## See Also:
