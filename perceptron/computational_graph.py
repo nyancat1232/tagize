@@ -74,7 +74,7 @@ model_1.forward()
         return self.out_forward
     
         
-    def backward(self) -> List[float]:
+    def get_gradient(self) -> List[float]:
         '''
         reflect partial derivation from output to each input
         ## See Also:
@@ -101,8 +101,18 @@ model_1.forward()
         if self.is_terminal():
             self.ins_backward= self._back_func(self.out_forward,self.get_shallow_ins())
         else:
-            self.ins_backward= self._back_func(self.out_backward.backward()[self.out_backward_address],self.get_shallow_ins())
+            self.ins_backward= self._back_func(self.out_backward.get_gradient()[self.out_backward_address],self.get_shallow_ins())
         return self.ins_backward
+
+    def apply_gradient(self):
+        rr=[]
+        for a,b,c in zip(self.ins_forward,self.ins_backward,self.ins_is_parameter):
+            if c:
+                rr.append(a-self.learning_rate*b)
+            else:
+                rr.append(a)
+        self.ins_forward=rr
+        return rr
 
     
     def is_terminal(self):
@@ -174,7 +184,9 @@ class Inv(Node):
     def _forw_func(self,arr):
         return 1./arr[0]
     def _back_func(self,out_back,ins_shallow_forw):
-        return out_back*-1./(ins_shallow_forw[0]**2)
+        rr=[]
+        rr.append(out_back*-1./(ins_shallow_forw[0]**2))
+        return rr
     
 
 # y=ax+b, x=1,y=3
