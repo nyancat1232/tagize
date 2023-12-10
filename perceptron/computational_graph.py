@@ -187,11 +187,24 @@ class Inv(Node):
         rr=[]
         rr.append(out_back*-1./(ins_shallow_forw[0]**2))
         return rr
-    
 
-# y=ax+b, x=1,y=3
-# a<-random
-# b<-random
-# layer1=Mult([a,x])
-# layer2=Add([layer1,b])
-# layer_error=Add([layer2,-y],terminal=True)
+
+# all values must have forward(traditional return), and backward(for learning), and is_parameter
+#fit func():
+# x=[1,2,3,...]
+# x.forward #[1,2,3,..]
+# x.backward #0.
+# x.is_param #False
+# y=[2,4,6,...]
+# y.forward #[2,4,6,...]
+# y.backward #[.]
+# y.is_param #False
+# a=*random()
+# a.forward #[..]
+# a.backward #[.]
+# a.is_param #True
+# b=*random()
+# b.forward #[..]
+# b.backward #[.]
+# b.is_param #True
+# reflect(MSE,100) y=ax+b
