@@ -28,7 +28,7 @@ def _add_each_nodes(self,other, func_forward: Callable[[List],float], func_backw
 class Node:
     forward_value : Any
     is_parameter: bool = False
-    learning_rate: float = 0.0001
+    learning_rate: float = 0.01
     backward_value : float = field(init=False)
 
     def __post_init__(self):
