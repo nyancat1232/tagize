@@ -99,13 +99,6 @@ class NodeBridge(Node):
             finally:
                 node_in._apply_gradient()
 
-
-
-        
-    
-    def __repr__(self):
-        return self.out
-    
     def __str__(self):
         fill_padding_lines=4
 
