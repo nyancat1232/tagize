@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Self,List,Any,Callable,Union
+from typing import Self,List,Any,Callable,Union,Iterator
 from dataclasses import dataclass,field
 
 def _mult_forw(ll):
@@ -17,7 +17,10 @@ def _mult_back(out:float,ins_shallow: List[float],in_index:int):
 
 
 def _add_each_nodes(self,other, func_forward: Callable[[List],float], func_backward : Callable[[float,List,int],float]):
-    nb = NodeBridge(forward_value=0.0,func_forward=func_forward,func_backward=func_backward)
+    try:
+        nb = NodeBridge(forward_value=[0.0 for l in range(len(self.forward_value))],func_forward=func_forward,func_backward=func_backward)
+    except:
+        nb = NodeBridge(forward_value=0.0,func_forward=func_forward,func_backward=func_backward)
     nb.ins.append(self)
     nb.ins.append(other)
 
@@ -51,6 +54,9 @@ class Node:
     def _apply_gradient(self:Self,func_optimizer_set):
         if self.is_parameter:
             self.forward_value = func_optimizer_set(self.forward_value,self.backward_value)
+
+    def __iter__(self):
+        return iter(self.forward_value)
     
     
 @dataclass

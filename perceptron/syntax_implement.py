@@ -1,10 +1,10 @@
-from pyplus.perceptron.graph import Node
-
+from pyplus.perceptron.graph import Node,NodeBridge
+from typing import Union
 
 def _reflect_before(optimizer,epoch,_locals):
-    def func(answer,predict,_locals=_locals):
+    def func(answer,predict:Union[Node,NodeBridge],_locals=_locals):
         ret = {l:_locals[l] for l in _locals}
-        e = predict + Node(-answer)
+        e = predict + Node(-1.*answer)
         for _ in range(epoch):    #will be reflec(100) 1600 c
             e.forward()
             e.backward()
