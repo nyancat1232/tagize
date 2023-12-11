@@ -1,4 +1,6 @@
 from pyplus.perceptron.graph import Node
+
+
 def _reflect_before(optimizer,epoch,_locals):
     def func(answer,predict,_locals=_locals):
         ret = {l:_locals[l] for l in _locals}
@@ -6,7 +8,7 @@ def _reflect_before(optimizer,epoch,_locals):
         for _ in range(epoch):    #will be reflec(100) 1600 c
             e.forward()
             e.backward()
-            e.apply_all_gradient_recursive()
+            e.apply_all_gradient_recursive(optimizer)
         return ret
     return func
 

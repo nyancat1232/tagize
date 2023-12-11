@@ -23,12 +23,17 @@ def _add_each_nodes(self,other, func_forward: Callable[[List],float], func_backw
 
     return nb
 
+def default_optimizer(learning_rate=0.01):
+    def func(forward_value,backward_value):
+        return forward_value-learning_rate*backward_value
+    return func
+
 
 @dataclass
 class Node:
     forward_value : Any
     is_parameter: bool = False
-    learning_rate: float = 0.01
+
     backward_value : float = field(init=False)
 
     def __post_init__(self):
@@ -39,14 +44,13 @@ class Node:
     
     def __mul__(self:Self,other:Self):
         return _add_each_nodes(self,other,_mult_forw,_mult_back)
-    
 
     def __str__(self:Self):
         return f'value={self.forward_value}, back value={self.backward_value}'
     
-    def _apply_gradient(self:Self):
+    def _apply_gradient(self:Self,func_optimizer_set):
         if self.is_parameter:
-            self.forward_value -= self.learning_rate*self.backward_value
+            self.forward_value = func_optimizer_set(self.forward_value,self.backward_value)
     
     
 @dataclass
@@ -90,14 +94,14 @@ class NodeBridge(Node):
 
         #return ret
 
-    def apply_all_gradient_recursive(self:Self):
+    def apply_all_gradient_recursive(self:Self,func_optimizer_set):
         for node_in in self.ins:
             try:
-                node_in.apply_all_gradient_recursive()
+                node_in.apply_all_gradient_recursive(func_optimizer_set)
             except:
                 pass
             finally:
-                node_in._apply_gradient()
+                node_in._apply_gradient(func_optimizer_set)
 
     def __str__(self):
         fill_padding_lines=4
