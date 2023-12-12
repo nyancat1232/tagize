@@ -2,13 +2,13 @@ import numpy as np
 from typing import Self,List,Any,Callable,Union,Iterator
 from dataclasses import dataclass,field
 
-def _mult_forw(ll):
+def _mult_forw(ins_shallow: List[float])->float:
     prod = 1.
-    for l in ll:
+    for l in ins_shallow:
         prod = prod* l
     return prod
 
-def _mult_back(out:float,ins_shallow: List[float],in_index:int):
+def _mult_back(out:float,ins_shallow: List[float],in_index:int)->float:
     but_me=[v for i,v in enumerate(ins_shallow) if i != in_index]
     prod=1
     for val in but_me:
@@ -17,10 +17,7 @@ def _mult_back(out:float,ins_shallow: List[float],in_index:int):
 
 
 def _add_each_nodes(self,other, func_forward: Callable[[List],float], func_backward : Callable[[float,List,int],float]):
-    try:
-        nb = NodeBridge(forward_value=[0.0 for l in range(len(self.forward_value))],func_forward=func_forward,func_backward=func_backward)
-    except:
-        nb = NodeBridge(forward_value=0.0,func_forward=func_forward,func_backward=func_backward)
+    nb = NodeBridge(forward_value=0.0,func_forward=func_forward,func_backward=func_backward)
     nb.ins.append(self)
     nb.ins.append(other)
 
@@ -43,7 +40,7 @@ class Node:
         self.backward_value = 0.0
 
     def __add__(self:Self,other:Self):
-        return _add_each_nodes(self,other,lambda nodes:sum(nodes),lambda output,ins,current_in:output)
+        return _add_each_nodes(self,other,lambda ins_shallow:sum(ins_shallow),lambda output,ins_shallow,current_in:output)
     
     def __mul__(self:Self,other:Self):
         return _add_each_nodes(self,other,_mult_forw,_mult_back)
