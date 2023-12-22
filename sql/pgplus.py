@@ -82,8 +82,8 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         replace_right_column_to = df_right.columns + f"@{current_foreign_schema}.{current_foreign_table}/{foreign_key_index}"
         df_right = df_right.rename(columns={fr:to for fr,to in zip(df_right.columns,replace_right_column_to) if fr != current_foreign_connect_column})
 
-        df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[current_foreign_connect_column],how='left')
         try:
+            df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[current_foreign_connect_column],how='left')
             df_result=df_result.drop(columns=['key_0',foreign_key_index,current_foreign_connect_column])
         except:
             'no rows in foreign keys'
