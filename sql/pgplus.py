@@ -74,7 +74,7 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     for foreign_key_index,foreign_key_series in fks.iterrows():
         df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn).reset_index()
 
-        df_right[foreign_key_series['upper_column_name']] = df_right[foreign_key_series['upper_column_name']].astype('object')
+        #df_right[foreign_key_series['upper_column_name']] = df_right[foreign_key_series['upper_column_name']].astype('object')
 
         current_foreign_schema =  foreign_key_series['upper_schema']
         current_foreign_table =  foreign_key_series['upper_table']
