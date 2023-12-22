@@ -75,13 +75,11 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn).reset_index()
 
         #df_right[foreign_key_series['upper_column_name']] = df_right[foreign_key_series['upper_column_name']].astype('object')
-
         current_foreign_schema =  foreign_key_series['upper_schema']
         current_foreign_table =  foreign_key_series['upper_table']
         current_foreign_connect_column = foreign_key_series['upper_column_name']
 
-        replace_right_column_to = df_right.columns + f"_{current_foreign_schema}_{current_foreign_table}"
-
+        replace_right_column_to = df_right.columns + f"_{current_foreign_schema}_{current_foreign_table}_{foreign_key_index}"
         df_right = df_right.rename(columns={fr:to for fr,to in zip(df_right.columns,replace_right_column_to) if fr != current_foreign_connect_column})
 
         df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[current_foreign_connect_column],how='left')
