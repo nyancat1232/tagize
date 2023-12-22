@@ -46,7 +46,7 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
         result = result.sort_index(ascending=False)
         return result
 
-def expand_foreign_column(schema_name:str,table_name:str,st_conn):
+def expand_foreign_column(schema_name:str,table_name:str,st_conn,_glob_exp_f_c:int):
     '''
     function of read_from_server as expanded column of foreign key
     ## Parameters:
@@ -66,26 +66,31 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     >>>> df_pivot_list = expand_foreign_column(schema_name='study',table_name='event',st_conn=conn)
     >>>> df_pivot_list
     '''
-
     df_result=read_from_server(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
-    index_name=df_result.index.name
-    df_result=df_result.reset_index()
+    df_result=df_result.reset_index(drop=True)
+    
     fks=get_foreign_keys(schema_name=schema_name,table_name=table_name,st_conn=st_conn)
+
     for foreign_key_index,foreign_key_series in fks.iterrows():
         df_right=read_from_server(foreign_key_series['upper_schema'],foreign_key_series['upper_table'],st_conn).reset_index()
 
         df_right[foreign_key_series['upper_column_name']] = df_right[foreign_key_series['upper_column_name']].astype('object')
 
-        temporary_replace_duplicate_name=f"__temp__{foreign_key_series['upper_column_name']}"
-        if foreign_key_series['upper_column_name'] in df_result.columns:
-            df_result=df_result.rename(columns={foreign_key_series['upper_column_name']:temporary_replace_duplicate_name})
-        df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[foreign_key_series['upper_column_name']],how='left')
+        current_foreign_schema =  foreign_key_series['upper_schema']
+        current_foreign_table =  foreign_key_series['upper_table']
+        current_foreign_connect_column = foreign_key_series['upper_column_name']
+
+        replace_right_column_to = df_right.columns + f"_{current_foreign_schema}_{current_foreign_table}"
+
+        df_right = df_right.rename(columns={fr:to for fr,to in zip(df_right.columns,replace_right_column_to) if fr != current_foreign_connect_column})
+
+        df_result=pd.merge(left=df_result,right=df_right,left_on=df_result[foreign_key_index],right_on=df_right[current_foreign_connect_column],how='left')
         try:
-            df_result=df_result.drop(columns=['key_0',foreign_key_index,foreign_key_series['upper_column_name']])
+            df_result=df_result.drop(columns=['key_0',foreign_key_index,current_foreign_connect_column])
         except:
             'no rows in foreign keys'
-        df_result=df_result.rename(columns={temporary_replace_duplicate_name:foreign_key_series['upper_column_name']})
-    return df_result.set_index(index_name)
+
+    return df_result
 
 def get_foreign_id_table(to_column:str,schema_name:str,table_name:str,st_conn):
     '''
