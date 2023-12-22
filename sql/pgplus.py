@@ -46,7 +46,7 @@ def read_from_server(schema_name:str,table_name:str,st_conn):
         result = result.sort_index(ascending=False)
         return result
 
-def expand_foreign_column(schema_name:str,table_name:str,st_conn,_glob_exp_f_c:int):
+def expand_foreign_column(schema_name:str,table_name:str,st_conn):
     '''
     function of read_from_server as expanded column of foreign key
     ## Parameters:
