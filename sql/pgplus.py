@@ -80,7 +80,7 @@ def expand_foreign_column(schema_name:str,table_name:str,st_conn):
         current_foreign_connect_column = foreign_key_series['upper_column_name']
         column_name_before_foreign = foreign_key_index
         
-        replace_right_column_to = f"{column_name_before_foreign}."+df_right.columns + f"@{current_foreign_schema}.{current_foreign_table}"
+        replace_right_column_to = f"{column_name_before_foreign}."+df_right.columns
 
         df_right = df_right.rename(columns={fr:to for fr,to in zip(df_right.columns,replace_right_column_to) if fr != current_foreign_connect_column})
 
