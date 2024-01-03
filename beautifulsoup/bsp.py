@@ -5,7 +5,7 @@ from typing import Dict,List
 from dataclasses import dataclass,field
 
 @dataclass
-class BS:
+class SoupElement:
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
     my_headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS\
             X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko)\
@@ -18,7 +18,7 @@ class BS:
     last_table:pd.DataFrame = field(init=False)
 
     def open_bs(self):
-        resp = get(url=self.url,headers=BS.my_headers)
+        resp = get(url=self.url,headers=SoupElement.my_headers)
         self.bs_result=BeautifulSoup(markup=resp.content,features='html5lib')
         return self.bs_result
     
@@ -42,9 +42,9 @@ class BS:
         return self.last_table
 
 class BSPlus:
-    bss : List[BS]
+    bss : List[SoupElement]
 
-    def __init__(self,*bss:BS):
+    def __init__(self,*bss:SoupElement):
         self.bss = []
         for bs in bss:
             self.bss.append(bs)
