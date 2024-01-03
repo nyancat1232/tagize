@@ -54,5 +54,5 @@ class BSPlus:
            bs.open_bs() 
         return self
 
-    def get_all_tables(self)->pd.DataFrame:
+    def get_all_tables(self)->Dict[str,pd.DataFrame]:
         return {bs.name: bs.get_all_tables() for bs in self.bss}
