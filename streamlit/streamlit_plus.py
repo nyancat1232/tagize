@@ -54,17 +54,22 @@ def write_columns(*positional_data,**keyword_data):
 class TabsPlus:
     '''
     st.tabs (in streamlit) with reading of text input
-    ## See Also:
+
+    See Also
+    --------
     st.tabs
-    ## Examples:
-    >tabs = TabsPlus(['apple','banana'])
-    >with tabs['apple']:
-    >    ...
+
+    Examples
+    --------
+    tabs = TabsPlus(['apple','banana'])
+    with tabs['apple']:
+        ...
 
     is eqaul to
-    >tabs = st.tabs(['apple','banana'])
-    >with tabs[0]:
-    >    ...
+
+    tabs = st.tabs(['apple','banana'])
+    with tabs[0]:
+        ...
     '''
     def __init__(self,*tabs: str):
         tab_information={tab_str:ind for ind,tab_str in enumerate(tabs)}
