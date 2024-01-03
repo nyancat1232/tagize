@@ -66,7 +66,7 @@ class TabsPlus:
     >with tabs[0]:
     >    ...
     '''
-    def __init__(self,tabs: Sequence[str]):
+    def __init__(self,*tabs: str):
         tab_information={tab_str:ind for ind,tab_str in enumerate(tabs)}
         self._streamlit_tabs = st.tabs(tab_information)
         self._tab_ind = tab_information
