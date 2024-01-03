@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup,ResultSet,Tag
 from requests import get
 import pandas as pd
-from typing import Dict,List
+from typing import Dict,List,Union
 from dataclasses import dataclass,field
 
 @dataclass
@@ -40,6 +40,13 @@ class SoupElement:
 
         self.last_table = result_tables
         return self.last_table
+    
+    def find_all(self,name,attrs:Union[Dict,None]=None)->ResultSet[Tag]:
+        rets = self.bs_result.find_all(name=name,attrs=attrs)
+        for ret in rets:
+            assert isinstance(ret,Tag)
+
+        return rets
 
 class BSPlus:
     bss : List[SoupElement]
@@ -56,3 +63,6 @@ class BSPlus:
 
     def get_all_tables(self)->Dict[str,pd.DataFrame]:
         return {bs.name: bs.get_all_tables() for bs in self.bss}
+    
+    def find_all(self,name,attrs:Union[Dict,None]=None)->Dict[str,ResultSet[Tag]]:
+        return {bs.name: bs.find_all(name,attrs) for bs in self.bss}
