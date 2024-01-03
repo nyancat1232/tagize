@@ -12,6 +12,7 @@ class BS:
             Chrome/71.0.3578.98 Safari/537.36", \
             "Accept":"text/html,application/xhtml+xml,application/xml;\
             q=0.9,image/webp,image/apng,*/*;q=0.8"}
+    name:str
     url:str
     bs_result:BeautifulSoup = field(init=False)
     last_table:pd.DataFrame = field(init=False)
@@ -43,10 +44,10 @@ class BS:
 class BSPlus:
     bss : List[BS]
 
-    def __init__(self,*urls:str):
+    def __init__(self,*bss:BS):
         self.bss = []
-        for url in urls:
-            self.bss.append(BS(url))
+        for bs in bss:
+            self.bss.append(bs)
     
     def __call__(self):
         for bs in self.bss:
@@ -54,4 +55,4 @@ class BSPlus:
         return self
 
     def get_all_tables(self)->pd.DataFrame:
-        return {bs.url: bs.get_all_tables() for bs in self.bss}
+        return {bs.name: bs.get_all_tables() for bs in self.bss}
