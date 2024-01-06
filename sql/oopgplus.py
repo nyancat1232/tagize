@@ -8,7 +8,8 @@ class TableStructure:
     schema_name : str
     table_name : str
     engine : sqlalchemy.Engine
-    child_tables : List[Self] = None
+    parent_table : Self
+    child_tables : List[Self] 
 
     def detect_child_tables(self):
         sql = f'''
@@ -34,10 +35,11 @@ class TableStructure:
             current_foreign_table =  foreign_key_series['upper_table']
             self.child_tables.append(TableStructure(schema_name=current_foreign_schema,
                                                     table_name=current_foreign_table,
-                                                    engine=self.engine))
+                                                    engine=self.engine,
+                                                    parent_table=self))
         return self.child_tables
     
-    def __init__(self,schema_name:str,table_name:str,engine:sqlalchemy.Engine):
+    def __init__(self,schema_name:str,table_name:str,engine:sqlalchemy.Engine,parent_table:Self=None):
         self.schema_name = schema_name
         self.table_name = table_name
         self.engine = engine
