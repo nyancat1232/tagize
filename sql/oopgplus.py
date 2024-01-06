@@ -113,15 +113,18 @@ class TableStructure:
         all_children = self.get_all_children()[1:]
 
         for child in all_children:
-            df_child = child.read()
-            df_child_columns = df_child.columns
-            df_child_indicate = {col : f'{child.parent_foreign_id}.{col}' for col in df_child_columns}
-            df_child = df_child.rename(columns=df_child_indicate)
+            try:
+                df_child = child.expand_read()
+                df_child_columns = df_child.columns
+                df_child_indicate = {col : f'{child.parent_foreign_id}.{col}' for col in df_child_columns}
+                df_child = df_child.rename(columns=df_child_indicate)
 
-            df = pd.merge(left=df,right=df_child,
-                     left_on=child.parent_foreign_id,right_index=True,
-                     how='left')
-            del df[child.parent_foreign_id]
+                df = pd.merge(left=df,right=df_child,
+                        left_on=child.parent_foreign_id,right_index=True,
+                        how='left')
+                del df[child.parent_foreign_id]
+            except:
+                pass
 
         df=df.set_index(self._identity_column)
         
