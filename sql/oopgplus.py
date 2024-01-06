@@ -9,7 +9,7 @@ class TableStructure:
     table_name : str
     engine : sqlalchemy.Engine
     parent_table : Self
-    child_tables : List[Self] 
+    generation : int
 
     def detect_child_tables(self):
         sql = f'''
@@ -24,27 +24,27 @@ class TableStructure:
         AND KCU.table_schema='{self.schema_name}'
         AND KCU.table_name='{self.table_name}';
         '''
-
-        
-        self.child_tables=[]
+        child_tables=[]
         
         df_foreign_keys = self.execute_sql(sql,index_column='current_column_name',drop_duplicates=True)
         
         for foreign_key_index,foreign_key_series in df_foreign_keys.iterrows():
             current_foreign_schema =  foreign_key_series['upper_schema']
             current_foreign_table =  foreign_key_series['upper_table']
-            self.child_tables.append(TableStructure(schema_name=current_foreign_schema,
+            child_tables.append(TableStructure(schema_name=current_foreign_schema,
                                                     table_name=current_foreign_table,
                                                     engine=self.engine,
-                                                    parent_table=self))
-        return self.child_tables
+                                                    parent_table=self,
+                                                    generation=self.generation+1))
+        return child_tables
     
-    def __init__(self,schema_name:str,table_name:str,engine:sqlalchemy.Engine,parent_table:Self=None):
+    def __init__(self,schema_name:str,table_name:str,engine:sqlalchemy.Engine,parent_table:Self=None,generation:int=0):
         self.schema_name = schema_name
         self.table_name = table_name
         self.engine = engine
         if parent_table:
             self.parent_table = parent_table
+        self.generation = generation
 
 
     def execute_sql(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
