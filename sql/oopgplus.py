@@ -46,7 +46,7 @@ class TableStructure:
                                                     generation=self.generation+1))
         return child_tables
     
-    def get_identity(self):
+    def refresh_identity(self):
         sql = f'''SELECT attname as identity_column
         FROM pg_attribute 
         JOIN pg_class 
@@ -71,7 +71,7 @@ class TableStructure:
             self.parent_table = parent_table
             self.parent_foreign_id = parent_foreign_id
         self.generation = generation
-        self._identity_column = self.get_identity()
+        self._identity_column = self.refresh_identity()
 
 
     def execute_sql_read(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
