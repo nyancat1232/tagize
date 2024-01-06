@@ -28,20 +28,6 @@ class TableStructure:
         '''
         return self.execute_sql(sql,index_column='current_column_name',drop_duplicates=True)
     
-    def get_identity(self):
-        sql = f'''SELECT attname as identity_column
-        FROM pg_attribute 
-        JOIN pg_class 
-            ON pg_attribute.attrelid = pg_class.oid
-        JOIN pg_namespace
-            ON pg_class.relnamespace = pg_namespace.oid
-        WHERE nspname = '{self.schema_name}'
-        AND relname = '{self.table_name}'
-        AND attidentity = 'a';
-        '''
-        self._identity_column = self.execute_sql(sql)['identity_column'].to_list()
-        return self._identity_column
-    
     def detect_child_tables(self):
         child_tables=[]
         
@@ -57,6 +43,20 @@ class TableStructure:
                                                     generation=self.generation+1))
         return child_tables
     
+    def get_identity(self):
+        sql = f'''SELECT attname as identity_column
+        FROM pg_attribute 
+        JOIN pg_class 
+            ON pg_attribute.attrelid = pg_class.oid
+        JOIN pg_namespace
+            ON pg_class.relnamespace = pg_namespace.oid
+        WHERE nspname = '{self.schema_name}'
+        AND relname = '{self.table_name}'
+        AND attidentity = 'a';
+        '''
+        self._identity_column = self.execute_sql(sql)['identity_column'].to_list()
+        return self._identity_column
+
     def __init__(self,schema_name:str,table_name:str,engine:sqlalchemy.Engine,parent_table:Self=None,generation:int=0):
         self.schema_name = schema_name
         self.table_name = table_name
