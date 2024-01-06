@@ -11,7 +11,7 @@ class TableStructure:
     parent_table : Self
     generation : int
 
-    def detect_child_tables(self):
+    def get_foreign_table(self):
         sql = f'''
         SELECT KCU.column_name AS current_column_name,
             CCU.table_schema AS upper_schema, 
@@ -24,9 +24,12 @@ class TableStructure:
         AND KCU.table_schema='{self.schema_name}'
         AND KCU.table_name='{self.table_name}';
         '''
+        return self.execute_sql(sql,index_column='current_column_name',drop_duplicates=True)
+
+    def detect_child_tables(self):
         child_tables=[]
         
-        df_foreign_keys = self.execute_sql(sql,index_column='current_column_name',drop_duplicates=True)
+        df_foreign_keys = self.get_foreign_table()
         
         for foreign_key_index,foreign_key_series in df_foreign_keys.iterrows():
             current_foreign_schema =  foreign_key_series['upper_schema']
@@ -71,8 +74,29 @@ class TableStructure:
         else:
             return [self]
             
+
+    def read(self,expanded_foreign:bool=True):
+        sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
+        '''
+        if expanded_foreign:
+            df = self.execute_sql(sql)
+            df = df.reset_index(drop=True)
+
+            all_child = self.get_all_children()
+            all_child
+
+            return df
+        else:
+            return self.execute_sql(sql)
+    
+
+
 class SQLALchemyPlus:
     engine : sqlalchemy.Engine
+    tables : List[TableStructure]
 
     def __init__(self,engine:sqlalchemy.Engine):
         self.engine = engine
+    
+    def add_tables(self,schema_name:str,table_name:str):
+        self.tables.append(TableStructure(schema_name,table_name))
