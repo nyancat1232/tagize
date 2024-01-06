@@ -60,6 +60,15 @@ class TableStructure:
         self._identity_column = self.execute_sql_read(sql)['identity_column'].to_list()
         return self._identity_column
 
+    def get_default_value(self):
+        sql = f'''SELECT column_name, column_default
+        FROM information_schema.columns
+        WHERE table_schema = '{self.schema_name}'
+        AND table_name = '{self.table_name}'
+        AND column_default IS NOT NULL ;
+        '''
+        return self.execute_sql_read(sql).set_index('column_name')
+
     def __init__(self,schema_name:str,table_name:str,
                  engine:sqlalchemy.Engine,
                  parent_table:Self=None,parent_foreign_id:str=None,
