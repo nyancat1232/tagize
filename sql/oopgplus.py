@@ -11,6 +11,8 @@ class TableStructure:
     parent_table : Self
     generation : int
 
+    _identity_column : str
+
     def get_foreign_table(self):
         sql = f'''
         SELECT KCU.column_name AS current_column_name,
@@ -37,7 +39,8 @@ class TableStructure:
         AND relname = '{self.table_name}'
         AND attidentity = 'a';
         '''
-        return self.execute_sql(sql)
+        self._identity_column = self.execute_sql(sql)['identity_column'].to_list()
+        return self._identity_column
     
     def detect_child_tables(self):
         child_tables=[]
@@ -61,6 +64,7 @@ class TableStructure:
         if parent_table:
             self.parent_table = parent_table
         self.generation = generation
+        self._identity_column = self.get_identity()
 
 
     def execute_sql(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
@@ -73,7 +77,10 @@ class TableStructure:
             if index_column:
                 return ret.set_index(index_column)
             else:
-                return ret
+                try:
+                    return ret.set_index(self._identity_column)
+                except:
+                    return ret
             
     def get_all_children(self):
         children = self.detect_child_tables()
