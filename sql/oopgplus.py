@@ -12,7 +12,7 @@ class TableStructure:
     generation : int
 
     _identity_column : str
-
+    
     def get_foreign_table(self):
         sql = f'''
         SELECT KCU.column_name AS current_column_name,
@@ -95,19 +95,10 @@ class TableStructure:
             return [self]
             
 
-    def read(self,expanded_foreign:bool=True):
+    def read(self):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
         '''
-        if expanded_foreign:
-            df = self.execute_sql(sql)
-            df = df.reset_index(drop=True)
-
-            all_child = self.get_all_children()
-            all_child
-
-            return df
-        else:
-            return self.execute_sql(sql)
+        return self.execute_sql(sql)
     
 
 
