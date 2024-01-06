@@ -130,7 +130,30 @@ class TableStructure:
         
         return df
     
+    
+def get_table_list(engine:sqlalchemy.Engine):
+    '''
+    Get table list in a database.
+    ## Parameters:
+    engine : sqlalchemy.Engine
+    a engine.
+    ## See Also:
+    
+    ## Examples:
+    import streamlit as st
+    eng = st.connection(name='postgresql',type='sql').engine
 
+    df_list=get_table_list(eng)
+    '''
+
+    
+    sql = f'''SELECT DISTINCT table_schema,table_name
+    FROM information_schema.table_constraints;
+    '''
+    with engine.connect() as con_con:
+        ret = pd.read_sql_query(sql,con=con_con)
+    
+        return ret
 
 class SQLALchemyPlus:
     engine : sqlalchemy.Engine
