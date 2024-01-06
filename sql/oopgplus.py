@@ -107,6 +107,26 @@ class TableStructure:
         '''
         return self.execute_sql(sql)
     
+    def expand_read(self):
+        df = self.read().reset_index()
+        
+        all_children = self.get_all_children()[1:]
+
+        for child in all_children:
+            df_child = child.read()
+            df_child_columns = df_child.columns
+            df_child_indicate = {col : f'{child.parent_foreign_id}.{col}' for col in df_child_columns}
+            df_child = df_child.rename(columns=df_child_indicate)
+
+            df = pd.merge(left=df,right=df_child,
+                     left_on=child.parent_foreign_id,right_index=True,
+                     how='left')
+            del df[child.parent_foreign_id]
+
+        df=df.set_index(self._identity_column)
+        
+        return df
+    
 
 
 class SQLALchemyPlus:
