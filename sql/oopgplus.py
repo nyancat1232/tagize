@@ -58,7 +58,19 @@ class TableStructure:
                 return ret.set_index(index_column)
             else:
                 return ret
+            
+    def get_all_children(self):
+        children = self.detect_child_tables()
+        if len(children)>0:
+            rr = [self]
+            for ts_child in children:
+                rr.extend(ts_child.get_all_children())
+            rr.sort(key=lambda l:l.generation,reverse=False)
 
+            return rr
+        else:
+            return [self]
+            
 class SQLALchemyPlus:
     engine : sqlalchemy.Engine
 
