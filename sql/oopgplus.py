@@ -9,10 +9,11 @@ class TableStructure:
     table_name : str
     engine : sqlalchemy.Engine
     parent_table : Self
+    parent_foreign_id : str
     generation : int
 
     _identity_column : str
-    
+
     def get_foreign_table(self):
         sql = f'''
         SELECT KCU.column_name AS current_column_name,
@@ -36,10 +37,12 @@ class TableStructure:
         for foreign_key_index,foreign_key_series in df_foreign_keys.iterrows():
             current_foreign_schema =  foreign_key_series['upper_schema']
             current_foreign_table =  foreign_key_series['upper_table']
+            column_name_before_foreign = foreign_key_index
             child_tables.append(TableStructure(schema_name=current_foreign_schema,
                                                     table_name=current_foreign_table,
                                                     engine=self.engine,
                                                     parent_table=self,
+                                                    parent_foreign_id=column_name_before_foreign,
                                                     generation=self.generation+1))
         return child_tables
     
