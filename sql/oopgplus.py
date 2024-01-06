@@ -25,7 +25,20 @@ class TableStructure:
         AND KCU.table_name='{self.table_name}';
         '''
         return self.execute_sql(sql,index_column='current_column_name',drop_duplicates=True)
-
+    
+    def get_identity(self):
+        sql = f'''SELECT attname as identity_column
+        FROM pg_attribute 
+        JOIN pg_class 
+            ON pg_attribute.attrelid = pg_class.oid
+        JOIN pg_namespace
+            ON pg_class.relnamespace = pg_namespace.oid
+        WHERE nspname = '{self.schema_name}'
+        AND relname = '{self.table_name}'
+        AND attidentity = 'a';
+        '''
+        return self.execute_sql(sql)
+    
     def detect_child_tables(self):
         child_tables=[]
         
