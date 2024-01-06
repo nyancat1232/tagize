@@ -88,6 +88,14 @@ class TableStructure:
                     return ret.set_index(self._identity_column)
                 except:
                     return ret
+                
+    def execute_sql_write(self,sql):
+        with self.engine.connect() as conn:
+            conn.execute(sql)
+            conn.commit()
+            
+        
+        return self.read()
             
     def get_all_children(self):
         children = self.detect_child_tables()
@@ -130,6 +138,19 @@ class TableStructure:
         
         return df
     
+    def upload(self,id_row:int,**kwarg):
+
+        original=",".join(["=".join([key,f"'{str(kwarg[key])}'"]) for key in kwarg if kwarg[key]])
+        
+        sql = text(f"""
+        UPDATE {self.schema_name}.{self.table_name}
+        SET {original}
+        WHERE {self._identity_column[0]} = {id_row};
+        """)
+        
+        return self.execute_sql_write(sql)
+
+
     
 def get_table_list(engine:sqlalchemy.Engine):
     '''
@@ -146,7 +167,7 @@ def get_table_list(engine:sqlalchemy.Engine):
     df_list=get_table_list(eng)
     '''
 
-    
+
     sql = f'''SELECT DISTINCT table_schema,table_name
     FROM information_schema.table_constraints;
     '''
