@@ -149,6 +149,15 @@ class TableStructure:
         """)
         
         return self.execute_sql_write(sql)
+    
+    def upload_append(self,**kwarg):
+        ke = ','.join([key for key in kwarg])
+        vvv = ','.join(["'"+str(kwarg[key])+"'" for key in kwarg])
+        sql = text(f"""
+        INSERT INTO public._foreign_test ({ke})
+        VALUES ({vvv})
+        """)
+        return self.execute_sql_write(sql)
 
 
     
