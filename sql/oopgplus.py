@@ -43,6 +43,9 @@ class TableStructure:
         self.schema_name = schema_name
         self.table_name = table_name
         self.engine = engine
+        if parent_table:
+            self.parent_table = parent_table
+
 
     def execute_sql(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
         with self.engine.connect() as conn:
