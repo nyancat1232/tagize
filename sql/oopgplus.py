@@ -27,7 +27,7 @@ class TableStructure:
         AND KCU.table_schema='{self.schema_name}'
         AND KCU.table_name='{self.table_name}';
         '''
-        return self.execute_sql(sql,index_column='current_column_name',drop_duplicates=True)
+        return self.execute_sql_read(sql,index_column='current_column_name',drop_duplicates=True)
     
     def detect_child_tables(self):
         child_tables=[]
@@ -57,7 +57,7 @@ class TableStructure:
         AND relname = '{self.table_name}'
         AND attidentity = 'a';
         '''
-        self._identity_column = self.execute_sql(sql)['identity_column'].to_list()
+        self._identity_column = self.execute_sql_read(sql)['identity_column'].to_list()
         return self._identity_column
 
     def __init__(self,schema_name:str,table_name:str,
@@ -74,7 +74,7 @@ class TableStructure:
         self._identity_column = self.get_identity()
 
 
-    def execute_sql(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
+    def execute_sql_read(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
         with self.engine.connect() as conn:
             ret = pd.read_sql_query(sql=sql,con=conn)
 
@@ -105,7 +105,7 @@ class TableStructure:
     def read(self):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
         '''
-        return self.execute_sql(sql)
+        return self.execute_sql_read(sql)
     
     def expand_read(self):
         df = self.read().reset_index()
