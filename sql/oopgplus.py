@@ -2,8 +2,8 @@ import pandas as pd
 from sqlalchemy.sql import text
 from dataclasses import dataclass
 import sqlalchemy
+from typing import List
 
-@dataclass
 class TableStructure:
     schema_name : str
     table_name : str
