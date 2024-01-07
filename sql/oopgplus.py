@@ -163,7 +163,7 @@ class TableStructure:
         ke = ','.join([key for key in kwarg])
         vvv = ','.join(["'"+str(kwarg[key])+"'" for key in kwarg])
         sql = text(f"""
-        INSERT INTO public._foreign_test ({ke})
+        INSERT INTO {self.schema_name}.{self.table_name} ({ke})
         VALUES ({vvv})
         """)
         return self.execute_sql_write(sql)
