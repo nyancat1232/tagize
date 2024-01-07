@@ -37,23 +37,6 @@ class TableStructure:
         table_name = '{self.table_name}';
         '''
         return self.execute_sql_read(sql,index_column='column_name')
-
-    def detect_child_tables(self):
-        child_tables=[]
-        
-        df_foreign_keys = self.get_foreign_table()
-        
-        for foreign_key_index,foreign_key_series in df_foreign_keys.iterrows():
-            current_foreign_schema =  foreign_key_series['upper_schema']
-            current_foreign_table =  foreign_key_series['upper_table']
-            column_name_before_foreign = foreign_key_index
-            child_tables.append(TableStructure(schema_name=current_foreign_schema,
-                                                    table_name=current_foreign_table,
-                                                    engine=self.engine,
-                                                    parent_table=self,
-                                                    parent_foreign_id=column_name_before_foreign,
-                                                    generation=self.generation+1))
-        return child_tables
     
     def refresh_identity(self):
         sql = f'''SELECT attname as identity_column
@@ -77,6 +60,24 @@ class TableStructure:
         AND column_default IS NOT NULL ;
         '''
         return self.execute_sql_read(sql).set_index('column_name')
+    
+    def detect_child_tables(self):
+        child_tables=[]
+        
+        df_foreign_keys = self.get_foreign_table()
+        
+        for foreign_key_index,foreign_key_series in df_foreign_keys.iterrows():
+            current_foreign_schema =  foreign_key_series['upper_schema']
+            current_foreign_table =  foreign_key_series['upper_table']
+            column_name_before_foreign = foreign_key_index
+            child_tables.append(TableStructure(schema_name=current_foreign_schema,
+                                                    table_name=current_foreign_table,
+                                                    engine=self.engine,
+                                                    parent_table=self,
+                                                    parent_foreign_id=column_name_before_foreign,
+                                                    generation=self.generation+1))
+        return child_tables
+
 
     def __init__(self,schema_name:str,table_name:str,
                  engine:sqlalchemy.Engine,
