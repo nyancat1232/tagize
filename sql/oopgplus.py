@@ -129,12 +129,12 @@ class TableStructure:
             return [self]
             
 
-    def read(self):
+    def read(self,ascending=False):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
         '''
-        return self.execute_sql_read(sql)
+        return self.execute_sql_read(sql).sort_index(ascending=ascending)
     
-    def expand_read(self):
+    def expand_read(self,ascending=False):
         df = self.read().reset_index()
         
         all_children = self.get_all_children()[1:]
@@ -155,7 +155,7 @@ class TableStructure:
 
         df=df.set_index(self._identity_column)
         
-        return df
+        return df.sort_index(ascending=ascending)
     
     def upload(self,id_row:int,**kwarg):
 
