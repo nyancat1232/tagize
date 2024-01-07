@@ -29,6 +29,15 @@ class TableStructure:
         '''
         return self.execute_sql_read(sql,index_column='current_column_name',drop_duplicates=True)
     
+    def get_types(self):
+        sql = f'''
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_schema = '{self.schema_name}' AND 
+        table_name = '{self.table_name}';
+        '''
+        return self.execute_sql_read(sql,index_column='column_name')
+
     def detect_child_tables(self):
         child_tables=[]
         
