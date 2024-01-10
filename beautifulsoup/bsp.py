@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup,ResultSet,Tag
 from requests import get
 import pandas as pd
-from typing import Dict,List,Union
+from typing import Dict,List,Union,Callable
 from dataclasses import dataclass,field
 
 @dataclass
@@ -56,9 +56,15 @@ class BSPlus:
         for bs in bss:
             self.bss.append(bs)
     
-    def __call__(self):
+    def __call__(self,
+                 pre_callback_func:Callable=None,
+                 post_callback_func:Callable=None):
         for bs in self.bss:
+           if pre_callback_func is not None:
+               pre_callback_func(bs)
            bs.open_bs() 
+           if post_callback_func is not None:
+               post_callback_func(bs)
         return self
 
     def get_all_tables(self)->Dict[str,pd.DataFrame]:
