@@ -4,6 +4,18 @@ from dataclasses import dataclass
 import sqlalchemy
 from typing import List,Self,Dict
 
+def _conversion_Sql_value(val):
+    match val:
+        case None:
+            return 'NULL'
+        case int():
+            return f"'{str(val)}'"
+        case str():
+            return f"'{val}'"
+        case _:
+            raise NotImplementedError(type(val))
+        
+    
 class TableStructure:
     schema_name : str
     table_name : str
@@ -159,7 +171,7 @@ class TableStructure:
     
     def upload(self,id_row:int,**kwarg):
 
-        original=",".join(["=".join([key,f"'{str(kwarg[key])}'"]) for key in kwarg if kwarg[key]])
+        original=",".join(["=".join([key,f"{_conversion_Sql_value(kwarg[key])}"]) for key in kwarg])
         
         sql = text(f"""
         UPDATE {self.schema_name}.{self.table_name}
