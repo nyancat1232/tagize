@@ -10,6 +10,8 @@ def _conversion_Sql_value(val):
             return 'NULL'
         case int():
             return f"'{str(val)}'"
+        case float():
+            return f"'{str(val)}'"
         case str():
             return f"'{val}'"
         case _:
