@@ -72,6 +72,10 @@ class BSPlus:
            if post_callback_func is not None:
                post_callback_func(bs)
         return self
+    
+    def append(self,se:SoupElement):
+        self.bss.append(se)
+        return self.bss
 
     def get_all_tables(self)->Dict[str,pd.DataFrame]:
         return {bs.name: bs.get_all_tables() for bs in self.bss}
