@@ -1,8 +1,10 @@
 from bs4 import BeautifulSoup,ResultSet,Tag
 from requests import get
+from requests.exceptions import ConnectionError
 import pandas as pd
 from typing import Dict,List,Union,Callable
 from dataclasses import dataclass,field
+from time import sleep
 
 @dataclass
 class SoupElement:
@@ -14,13 +16,20 @@ class SoupElement:
             q=0.9,image/webp,image/apng,*/*;q=0.8"}
     name:str
     url:str
+    max_trial : int = 3
     bs_result:BeautifulSoup = field(init=False)
     last_table:pd.DataFrame = field(init=False)
 
     def open_bs(self):
-        resp = get(url=self.url,headers=SoupElement.my_headers)
-        self.bs_result=BeautifulSoup(markup=resp.content,features='html5lib')
-        return self.bs_result
+        for current in range(self.max_trial):
+            try:
+                resp = get(url=self.url,headers=SoupElement.my_headers)
+                self.bs_result=BeautifulSoup(markup=resp.content,features='html5lib')
+                return self.bs_result
+            except ConnectionError as ce:
+                print(f"failed at {current}")
+                sleep(1.0)
+        print("No connetion")
     
     def get_all_tables(self)->pd.DataFrame:
         tables:ResultSet[Tag] = self.bs_result.find_all(name='table')
