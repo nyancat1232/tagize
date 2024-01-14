@@ -55,8 +55,14 @@ class BSPlus:
         self.bss = []
         for bs in bss:
             self.bss.append(bs)
-    
+            
     def __call__(self,
+                 pre_callback_func:Callable=None,
+                 post_callback_func:Callable=None):
+        return self.do_process(pre_callback_func=pre_callback_func,
+                               post_callback_func=post_callback_func)
+    
+    def do_process(self,
                  pre_callback_func:Callable=None,
                  post_callback_func:Callable=None):
         for bs in self.bss:
