@@ -45,7 +45,7 @@ class TableStructure:
     
     def get_types(self):
         sql = f'''
-        SELECT column_name, data_type
+        SELECT column_name, data_type, udt_name
         FROM information_schema.columns
         WHERE table_schema = '{self.schema_name}' AND 
         table_name = '{self.table_name}';
