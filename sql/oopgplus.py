@@ -154,7 +154,11 @@ class TableStructure:
     def read(self,ascending=False):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
         '''
-        return self.execute_sql_read(sql).sort_index(ascending=ascending)
+        df_exec_res = self.execute_sql_read(sql)
+        column_identity = df_exec_res.index.name
+
+
+        return df_exec_res.sort_index(ascending=ascending)
     
     def expand_read(self,ascending=False):
         df = self.read().reset_index()
