@@ -20,7 +20,7 @@ def _conversion_Sql_value(val):
 def _convert_pgsql_type_to_pandas_type(pgtype:str):
     match pgtype:
         case 'bigint':
-            return 'int64'
+            return 'Int64' #Int vs int
         case 'text':
             return 'string'
         case _:
@@ -160,7 +160,7 @@ class TableStructure:
 
         conv_type = {column_name:_convert_pgsql_type_to_pandas_type(df_col_types['data_type'][column_name]) for column_name 
                      in df_col_types.index if column_name != column_identity}
-
+        df_exec_res = df_exec_res.astype(conv_type)
         return df_exec_res.sort_index(ascending=ascending)
     
     def expand_read(self,ascending=False):
