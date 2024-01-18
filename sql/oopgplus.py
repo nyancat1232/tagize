@@ -158,9 +158,9 @@ class TableStructure:
         df_col_types = self.get_types()
         column_identity = df_exec_res.index.name
 
-        conv_type = {column_name:df_col_types['data_type'][column_name] for column_name 
+        conv_type = {column_name:_convert_pgsql_type_to_pandas_type(df_col_types['data_type'][column_name]) for column_name 
                      in df_col_types.index if column_name != column_identity}
-        print(conv_type)
+
         return df_exec_res.sort_index(ascending=ascending)
     
     def expand_read(self,ascending=False):
