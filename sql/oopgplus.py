@@ -16,7 +16,15 @@ def _conversion_Sql_value(val):
             return f"'{val}'"
         case _:
             raise NotImplementedError(type(val))
-        
+
+def _convert_pgsql_type_to_pandas_type(pgtype:str):
+    match pgtype:
+        case 'bigint':
+            return 'int64'
+        case 'text':
+            return 'string'
+        case _:
+            raise NotImplementedError(pgtype)
     
 class TableStructure:
     schema_name : str
