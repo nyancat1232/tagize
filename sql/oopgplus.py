@@ -21,8 +21,16 @@ def _convert_pgsql_type_to_pandas_type(pgtype:str):
     match pgtype:
         case 'bigint':
             return 'Int64' #Int vs int
+        case 'integer':
+            return 'Int32' #Int vs int
+        case 'boolean':
+            return 'boolean'
         case 'text':
             return 'string'
+        case 'double precision':
+            return 'Float64'
+        case 'date':
+            return 'object'
         case _:
             raise NotImplementedError(pgtype)
     
