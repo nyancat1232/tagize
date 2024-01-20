@@ -31,6 +31,8 @@ def _convert_pgsql_type_to_pandas_type(pgtype:str):
             return 'Float64'
         case 'date':
             return 'object'
+        case 'timestamp with time zone':
+            return 'object'
         case _:
             raise NotImplementedError(pgtype)
     
