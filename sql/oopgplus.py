@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 from dataclasses import dataclass
 import sqlalchemy
 from typing import List,Self,Dict
-
+from datetime import datetime
 def _conversion_Sql_value(val):
     match val:
         case None:
@@ -14,6 +14,8 @@ def _conversion_Sql_value(val):
             return f"'{str(val)}'"
         case str():
             return f"'{val}'"
+        case pd.Timestamp():
+            return f"'{str(val)}'"
         case _:
             raise NotImplementedError(type(val))
 
