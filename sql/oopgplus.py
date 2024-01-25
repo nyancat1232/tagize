@@ -4,6 +4,10 @@ from dataclasses import dataclass
 import sqlalchemy
 from typing import List,Self,Dict
 from datetime import datetime
+
+def _apply_escaping(sentence:str):
+    return sentence.replace("'","''")
+
 def _conversion_Sql_value(val):
     match val:
         case None:
@@ -13,7 +17,7 @@ def _conversion_Sql_value(val):
         case float():
             return f"'{str(val)}'"
         case str():
-            return f"'{val}'"
+            return f"'{_apply_escaping(val)}'"
         case pd.Timestamp():
             return f"'{str(val)}'"
         case _:
@@ -212,7 +216,7 @@ class TableStructure:
     
     def upload_append(self,**kwarg):
         ke = ','.join([key for key in kwarg])
-        vvv = ','.join(["'"+str(kwarg[key])+"'" for key in kwarg])
+        vvv = ','.join(["'"+_apply_escaping(str(kwarg[key]))+"'" for key in kwarg])
         sql = text(f"""
         INSERT INTO {self.schema_name}.{self.table_name} ({ke})
         VALUES ({vvv})
