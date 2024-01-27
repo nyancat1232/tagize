@@ -129,18 +129,20 @@ class FileExecutor:
                     
                     try:
                         _temp_df = behavior.read_method(file,**behavior.read_method_kwarg)
-                    except:
+                    except Exception as e1:
+                        st.error(e1)
                         try:
                             _temp_df = behavior.read_method(file)
-                        except:
-                            continue
+                        except Exception as e:
+                            st.error(e)
                     
                     try:
                         input_df[input_key] = behavior.dataframe_post_process(_temp_df,**behavior.dataframe_post_process_kwarg)
                     except:
                         try:
                             input_df[input_key] = behavior.dataframe_post_process(_temp_df)
-                        except:
+                        except Exception as e:
                             input_df[input_key] = _temp_df
+                            st.error(e)
 
         return input_df
