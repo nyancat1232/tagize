@@ -90,8 +90,8 @@ class FileDescription:
 class FileExecutor:
     behaviors : List[FileDescription] = []
 
-    def append_behavior(self,file_regex_str:str,read_method:Callable):
-        self.behaviors.append(FileDescription(file_regex_str,read_method))
+    def append_behavior(self,file_regex_str:str,read_method:Callable,post_method:Callable):
+        self.behaviors.append(FileDescription(file_regex_str,read_method,dataframe_post_process=post_method))
         return self.behaviors
 
     def execute_file_descriptions(self,show:bool=False,label:str='multifiles test')->Dict[str,pd.DataFrame]:
