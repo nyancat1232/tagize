@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-from typing import Sequence
+from typing import Sequence,Callable
 from dataclasses import dataclass
 
 def divide(old_func):
@@ -81,6 +81,44 @@ class TabsPlus:
 
 
 
+def init_session(session_name:str):
+    '''
+    initialize as streamlit's session state.
+    
+    Parameters
+    ----------
+    session_name : str
+    session name for saving.
+    
+    Examples
+    --------
+    @init_session('df_character')
+    def init_character():
+        df_inner = pd.DataFrame({'name':['KAngel','Marija','Adam Jensen','Geralt of Rivia'],'gender':['F','F','M','M']})
+        return df_inner
+
+    init_character(False)
+    st.session_state['df_character']
+    >>>           name gender
+    0           KAngel      F
+    1           Marija      F
+    2      Adam Jensen      M
+    3  Geralt of Rivia      M
+    '''
+    def decor(func:Callable):
+        def func_applied(refresh:bool=True):
+            if refresh:
+                try:
+                    del st.session_state[session_name]
+                except:
+                    st.toast(f'no {session_name}')
+
+            if session_name not in st.session_state:
+                st.toast(f'initialize {session_name}')
+                st.session_state[session_name] = func() 
+            return st.session_state[session_name]  
+        return func_applied
+    return decor
 
 
 
