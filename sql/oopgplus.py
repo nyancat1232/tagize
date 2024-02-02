@@ -217,7 +217,7 @@ class TableStructure:
         return self.execute_sql_write(sql)
     
     def upload_append(self,**kwarg):
-        ke = ','.join([key for key in kwarg])
+        ke = ','.join([f'"{key}"' for key in kwarg])
         vvv = ','.join(["'"+_apply_escaping(str(kwarg[key]))+"'" for key in kwarg])
         sql = text(f"""
         INSERT INTO {self.schema_name}.{self.table_name} ({ke})
