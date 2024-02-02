@@ -168,6 +168,18 @@ class TableStructure:
         else:
             return [self]
             
+    def create_table(self,**type_dict):
+        if 'id' in type_dict:
+            raise ValueError('id is reserved.')
+
+        qlines = [" ".join([f'"{key}"',type_dict[key]])for key in type_dict]
+        qlines.insert(0,"id bigint NOT NULL GENERATED ALWAYS AS IDENTITY")
+        qlines.append("PRIMARY KEY (id)")
+        query=text(f'''CREATE TABLE {self.schema_name}.{self.table_name} (
+            {','.join(qlines)}
+        );''')
+        
+        return self.execute_sql_write(query)
 
     def read(self,ascending=False):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
