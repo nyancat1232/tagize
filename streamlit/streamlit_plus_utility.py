@@ -90,7 +90,6 @@ class FileDescription:
 class FileExecutor:
     behaviors : List[FileDescription] = []
 
-    #fe.behaviors.append( FileDescription(  "^buy_ticker.parquet$" ,pd.read_parquet ))
     def append_behavior(self,file_regex_str:str,read_method:Callable):
         self.behaviors.append(FileDescription(file_regex_str,read_method))
         return self.behaviors
