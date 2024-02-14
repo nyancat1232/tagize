@@ -189,7 +189,21 @@ class TableStructure:
             raise ValueError('id is reserved.')
         
         def _ret_a_line(key:str):
-            return [f'"{key}"',type_dict[key]]
+            def _default_value_of_type(type:str):
+                match type:
+                    case 'date':
+                        return ['DEFAULT','now()']
+                    case 'timestamp without time zone':
+                        return ['DEFAULT','now()']
+                    case 'timestamp with time zone':
+                        return ['DEFAULT','now()']
+                    case _:
+                        return None
+                    
+            ret= [f'"{key}"',type_dict[key]]
+            if (retplus := _default_value_of_type(type_dict[key])) is not None:
+                ret.extend(retplus)
+            return ret
 
 
         qlines = [" ".join(_ret_a_line(key)) for key in type_dict]
