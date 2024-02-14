@@ -187,8 +187,12 @@ class TableStructure:
         '''
         if 'id' in type_dict:
             raise ValueError('id is reserved.')
+        
+        def _ret_a_line(key:str):
+            return [f'"{key}"',type_dict[key]]
 
-        qlines = [" ".join([f'"{key}"',type_dict[key]])for key in type_dict]
+
+        qlines = [" ".join(_ret_a_line(key)) for key in type_dict]
         qlines.insert(0,"id bigint NOT NULL GENERATED ALWAYS AS IDENTITY")
         qlines.append("PRIMARY KEY (id)")
         query=text(f'''CREATE TABLE {self.schema_name}.{self.table_name} (
