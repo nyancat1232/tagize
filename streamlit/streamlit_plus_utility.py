@@ -7,28 +7,19 @@ import re
 from unicodedata import normalize
 
 def from_csv_to_dataframe(label:str,**dataframe_keywords)->pd.DataFrame:
-    """Read a csv file using a ßstrealit uploader
-
-    Args:
-        label (str): texts to show.
-    A short label explaining to the user what this file uploader is for. The label can optionally contain Markdown and supports the following
-    Returns:
-        DataFrame: A dataframe
-    """
     '''
     Read a csv file using a ßstrealit uploader
     ## Parameters:
     label : str
-    A short label explaining to the user what this file uploader is for. The label can optionally contain Markdown and supports the following (from streamlit==1.28.1 docstring)
+        A short label explaining to the user what this file uploader is for. The label can optionally contain Markdown and supports the following (from streamlit==1.28.1 docstring)
     dataframe_keywords : keywords of pd.Dataframe
-    keyword arguments for initializing pd.Dataframe
+        keyword arguments for initializing pd.Dataframe
     ## See Also:
     from_pdf_to_dataframe
     from_txt_to_dataframe
     from_xls_to_dataframe
     from_parquet_to_dataframe
-    ## Examples:
-    
+
     '''
 
     if file := st.file_uploader(label=label,type="csv"):
@@ -71,14 +62,14 @@ class FileDescription:
     ## See Also:
     execute_file_descriptions
     ## Examples:
-    import pandas as pd
-    from typing import List
-    from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
-
-    fds : List[FileDescription]=[]
-    fds.append(FileDescription('^train.csv$',pd.read_csv))
-    fds.append(FileDescription('^codebook.csv$',pd.read_csv))
-    dfs = execute_file_descriptions(fds)
+    >>> import pandas as pd
+    >>> from typing import List
+    >>> from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
+    >>> 
+    >>> fds : List[FileDescription]=[]
+    >>> fds.append(FileDescription('^train.csv$',pd.read_csv))
+    >>> fds.append(FileDescription('^codebook.csv$',pd.read_csv))
+    >>> dfs = execute_file_descriptions(fds)
     '''
     file_regex_str : str
     read_method : Callable
@@ -101,20 +92,21 @@ class FileExecutor:
         '''
         Accept multiple files and reads some files you want.
         ## Parameters:
-        behaviors : Case that accept files.
-        show : Verbose. Show if accept files.
-        ## See Also:
+        behaviors : ...
+            Case that accept files.
+        show : bool
+            Verbose. Show if accept files.
         ## Examples:
-        import streamlit as st
-        import pandas as pd
-        from pyplus.streamlit.streamlit_plus_utility import FileExecutor,FileDescription
-
-        with st.sidebar:
-            fe = FileExecutor()
-            fe.behaviors.append( FileDescription('ratings.txt',pd.read_table) )
-            dfs = fe.execute_file_descriptions()
-
-        dfs
+        >>> import streamlit as st
+        >>> import pandas as pd
+        >>> from pyplus.streamlit.streamlit_plus_utility import FileExecutor,FileDescription
+        >>> 
+        >>> with st.sidebar:
+        >>>     fe = FileExecutor()
+        >>>     fe.behaviors.append( FileDescription('ratings.txt',pd.read_table) )
+        >>>     dfs = fe.execute_file_descriptions()
+        >>> 
+        >>> dfs
         '''
         
         input_df={}
