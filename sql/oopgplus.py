@@ -169,6 +169,22 @@ class TableStructure:
             return [self]
             
     def create_table(self,**type_dict):
+        '''
+        create a table
+        
+        Parameters
+        ----------
+        type_dict : dict
+            {column_name : column_type}.
+        
+        
+        Examples
+        --------  
+        >>> ts = sqlp.TableStructure(schema_name=schema_name,table_name=table_name,engine=conn.engine)
+        >>> res = ts.create_table(name='text',location='text',grade='bigint',x='double precision',y='double precision')
+            text   location    grade    x    y
+        ...
+        '''
         if 'id' in type_dict:
             raise ValueError('id is reserved.')
 
