@@ -15,25 +15,22 @@ def write_columns(*positional_data,**keyword_data):
     write by columns
     ## Parameters:
     positional_data : Any
-    .
+        ...
     keyword_data : Any
-    .
+        ....
     ## See Also:
     st.write
     st.columns
     ## Examples:
-    from pyplus.streamlit.streamlit_plus import write_columns
-    import streamlit as st
-
-    xx=np.array([['x1','x2'],['x3','x4']])
-    ww=np.array([['w1','w2'],['w3','w4']])
-
-    write_columns(X1=xx,W1=ww)
-
-    >> X1           W1
-    >> 0    1       0       1
-    >> x1   x2      w1      w2
-    >> x3   x4      w3      w4
+    >>> from pyplus.streamlit.streamlit_plus import write_columns
+    >>> import streamlit as st
+    >>> xx=np.array([['x1','x2'],['x3','x4']])
+    >>> ww=np.array([['w1','w2'],['w3','w4']])
+    >>> write_columns(X1=xx,W1=ww)
+    X1           W1
+    0    1       0       1
+    x1   x2      w1      w2
+    x3   x4      w3      w4
 
     '''
     if len(positional_data)+len(keyword_data)<1:
@@ -61,15 +58,15 @@ class TabsPlus:
 
     Examples
     --------
-    tabs = TabsPlus(['apple','banana'])
-    with tabs['apple']:
-        ...
+    >>> tabs = TabsPlus(['apple','banana'])
+    >>> with tabs['apple']:
+    >>>     ...
 
     is eqaul to
 
-    tabs = st.tabs(['apple','banana'])
-    with tabs[0]:
-        ...
+    >>> tabs = st.tabs(['apple','banana'])
+    >>> with tabs[0]:
+    >>>     ...
     '''
     def __init__(self,*tabs: str):
         tab_information={tab_str:ind for ind,tab_str in enumerate(tabs)}
@@ -88,18 +85,18 @@ def init_session(session_name:str):
     Parameters
     ----------
     session_name : str
-    session name for saving.
+        session name for saving.
     
     Examples
     --------
-    @init_session('df_character')
-    def init_character():
-        df_inner = pd.DataFrame({'name':['KAngel','Marija','Adam Jensen','Geralt of Rivia'],'gender':['F','F','M','M']})
-        return df_inner
-
-    init_character(False)
-    st.session_state['df_character']
-    >>>           name gender
+    >>> @init_session('df_character')
+    >>> def init_character():
+    >>>     df_inner = pd.DataFrame({'name':['KAngel','Marija','Adam Jensen','Geralt of Rivia'],'gender':['F','F','M','M']})
+    >>>     return df_inner
+    >>> 
+    >>> init_character(False)
+    >>> st.session_state['df_character']
+                  name gender
     0           KAngel      F
     1           Marija      F
     2      Adam Jensen      M
