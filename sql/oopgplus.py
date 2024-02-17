@@ -61,6 +61,8 @@ def _ret_a_line(key:str,dtype:str):
         ret.extend(retplus)
     return ret
 
+_reserved_columns = ['id']
+
 class TableStructure:
     schema_name : str
     table_name : str
@@ -202,8 +204,9 @@ class TableStructure:
             text   location    grade    x    y
         ...
         '''
-        if 'id' in type_dict:
-            raise ValueError('id is reserved.')
+        for rc in _reserved_columns:
+            if rc in type_dict:
+                raise ValueError(f'{rc} is reserved.')
         
 
 
