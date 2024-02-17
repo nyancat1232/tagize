@@ -219,6 +219,16 @@ class TableStructure:
         
         return self.execute_sql_write(query)
 
+    def append_column(self,**type_dict):
+        for rc in _reserved_columns:
+            if rc in type_dict:
+                raise ValueError(f'{rc} is reserved.')
+        
+        qlines = [" ".join(['ADD COLUMN']+_ret_a_line(key,type_dict[key])) for key in type_dict]
+        query = text(f'''ALTER TABLE {self.schema_name}.{self.table_name} {','.join(qlines)};''')
+        print(query)
+        return self.execute_sql_write(query)
+
     def read(self,ascending=False):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
         '''
