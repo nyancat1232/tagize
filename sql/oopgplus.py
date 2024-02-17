@@ -24,6 +24,7 @@ def _conversion_Sql_value(val):
             raise NotImplementedError(type(val))
 
 def _convert_pgsql_type_to_pandas_type(pgtype:str):
+    #https://pandas.pydata.org/pandas-docs/stable/user_guide/basics.html#basics-dtypes
     match pgtype:
         case 'bigint':
             return 'Int64' #Int vs int
