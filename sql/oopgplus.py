@@ -2,13 +2,13 @@ import pandas as pd
 from sqlalchemy.sql import text
 from dataclasses import dataclass
 import sqlalchemy
-from typing import List,Self,Dict
+from typing import Self
 from datetime import datetime
 
 def _apply_escaping(sentence:str):
     return sentence.replace("'","''")
 
-def _conversion_Sql_value(val):
+def _conversion_Sql_value(val:None|int|float|str|pd.Timestamp):
     match val:
         case None:
             return 'NULL'
@@ -141,7 +141,7 @@ class TableStructure:
 
     def __init__(self,schema_name:str,table_name:str,
                  engine:sqlalchemy.Engine,
-                 parent_table:Self=None,parent_foreign_id:str=None,
+                 parent_table:Self|None=None,parent_foreign_id:str|None=None,
                  generation:int=0):
         self.schema_name = schema_name
         self.table_name = table_name
@@ -314,7 +314,7 @@ def get_table_list(engine:sqlalchemy.Engine):
 
 class SQLALchemyPlus:
     engine : sqlalchemy.Engine
-    tables : List[TableStructure]
+    tables : list[TableStructure]
 
     def __init__(self,engine:sqlalchemy.Engine):
         self.engine = engine
