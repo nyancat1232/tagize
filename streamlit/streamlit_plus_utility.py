@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pdfplumber as pdfp
 from dataclasses import dataclass
-from typing import Callable,Dict,Any,List,Optional
+from typing import Callable,Any
 import re
 from unicodedata import normalize
 
@@ -63,23 +63,22 @@ class FileDescription:
     execute_file_descriptions
     ## Examples:
     >>> import pandas as pd
-    >>> from typing import List
     >>> from pyplus.streamlit.streamlit_plus_utility import FileDescription,execute_file_descriptions
     >>> 
-    >>> fds : List[FileDescription]=[]
+    >>> fds : list[FileDescription]=[]
     >>> fds.append(FileDescription('^train.csv$',pd.read_csv))
     >>> fds.append(FileDescription('^codebook.csv$',pd.read_csv))
     >>> dfs = execute_file_descriptions(fds)
     '''
     file_regex_str : str
     read_method : Callable
-    var_name : Optional[str] = None
-    dataframe_post_process : Optional[Callable] = None
-    read_method_kwarg : Optional[Dict[Any,Any]] = None
-    dataframe_post_process_kwarg : Optional[Dict[Any,Any]]  = None
+    var_name : str|None = None
+    dataframe_post_process : Callable|None = None
+    read_method_kwarg : dict[Any,Any]|None = None
+    dataframe_post_process_kwarg : dict[Any,Any]|None  = None
 
 class FileExecutor:
-    behaviors : List[FileDescription] = []
+    behaviors : list[FileDescription] = []
 
     def append_behavior(self,file_regex_str:str,read_method:Callable,post_method:Callable=None):
         if post_method is None:
@@ -88,7 +87,7 @@ class FileExecutor:
             self.behaviors.append(FileDescription(file_regex_str,read_method,dataframe_post_process=post_method))
         return self.behaviors
 
-    def execute_file_descriptions(self,show:bool=False,label:str='multifiles test')->Dict[str,pd.DataFrame]:
+    def execute_file_descriptions(self,show:bool=False,label:str='multifiles test')->dict[str,pd.DataFrame]:
         '''
         Accept multiple files and reads some files you want.
         ## Parameters:

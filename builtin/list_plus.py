@@ -1,4 +1,4 @@
-from typing import List,Any
+from typing import Any
 
 def swap_in_list(list_,index1:int,index2:int,mutable:bool=False):
     if mutable:
@@ -11,7 +11,7 @@ def swap_in_list(list_,index1:int,index2:int,mutable:bool=False):
         ret[index2] = list_[index1]
         return ret
     
-def change_position(list_:List[Any],index_from:int,index_to:int,mutable=False):
+def change_position(list_:list[Any],index_from:int,index_to:int,mutable=False):
     if mutable:
         raise Exception("No implementation")
     else:
