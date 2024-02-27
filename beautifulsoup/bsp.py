@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup,ResultSet,Tag
 from requests import get
 from requests.exceptions import ConnectionError
 import pandas as pd
-from typing import Dict,List,Union,Callable
+from typing import Callable
 from dataclasses import dataclass,field
 from time import sleep
 
@@ -50,7 +50,7 @@ class SoupElement:
         self.last_table = result_tables
         return self.last_table
     
-    def find_all(self,name,attrs:Union[Dict,None]=None)->ResultSet[Tag]:
+    def find_all(self,name,attrs:dict|None=None)->ResultSet[Tag]:
         rets = self.bs_result.find_all(name=name,attrs=attrs)
         for ret in rets:
             assert isinstance(ret,Tag)
@@ -58,7 +58,7 @@ class SoupElement:
         return rets
 
 class BSPlus:
-    bss : List[SoupElement]
+    bss : list[SoupElement]
 
     def __init__(self,*bss:SoupElement):
         self.bss = []
@@ -66,14 +66,14 @@ class BSPlus:
             self.bss.append(bs)
             
     def __call__(self,
-                 pre_callback_func:Callable=None,
-                 post_callback_func:Callable=None):
+                 pre_callback_func:Callable|None=None,
+                 post_callback_func:Callable|None=None):
         return self.do_process(pre_callback_func=pre_callback_func,
                                post_callback_func=post_callback_func)
     
     def do_process(self,
-                 pre_callback_func:Callable=None,
-                 post_callback_func:Callable=None):
+                 pre_callback_func:Callable|None=None,
+                 post_callback_func:Callable|None=None):
         for bs in self.bss:
            if pre_callback_func is not None:
                pre_callback_func(bs)
@@ -86,8 +86,8 @@ class BSPlus:
         self.bss.append(se)
         return self.bss
 
-    def get_all_tables(self)->Dict[str,pd.DataFrame]:
+    def get_all_tables(self)->dict[str,pd.DataFrame]:
         return {bs.name: bs.get_all_tables() for bs in self.bss}
     
-    def find_all(self,name,attrs:Union[Dict,None]=None)->Dict[str,ResultSet[Tag]]:
+    def find_all(self,name,attrs:dict|None=None)->dict[str,ResultSet[Tag]]:
         return {bs.name: bs.find_all(name,attrs) for bs in self.bss}
