@@ -1,4 +1,5 @@
 import itertools
+
 class CaseCalc:
     '''
     Calculation for all cases. 
