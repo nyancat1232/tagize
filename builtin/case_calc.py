@@ -40,3 +40,9 @@ class CaseCalc:
         in itertools.product(*self.samples.values()) if case not in exclusion_vals}
     def input_something(self,display:str)->str:
         raise NotImplementedError('You must implement input_something(self,display:str)->str.')
+    def ask_all_case(self)->dict[tuple,str]:
+        all_case = self.get_all_case()
+        ret_dict = dict()
+        for case in all_case:
+            ret_dict[case] = self.input_something(f'When {case}?')
+        return ret_dict
