@@ -1,5 +1,23 @@
 import itertools
 class CaseCalc:
+    '''
+    Calculation for all cases. 
+
+    If you have difficulty in deciding something, this will be helpful.
+    
+    Examples
+    --------
+    >>> cc2 = bp.CaseCalc()
+    >>> cc2['fruit']={'apple','banana','orange'}
+    >>> cc2['eat']={True,False}
+    >>> cc2-={'eat':False,'fruit':'apple'}
+    >>> cc2()
+    {('apple', True),
+    ('banana', False),
+    ('banana', True),
+    ('orange', False),
+    ('orange', True)}
+    '''
     samples : dict[str,set]
     exclusion : list[dict[str,set]]
     def __init__(self):
