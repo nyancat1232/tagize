@@ -31,7 +31,7 @@ class CaseCalc:
         return self
     def __repr__(self):
         return f'Case:{repr(self.samples)}\nCase exclusion: {self.exclusion}\n{self.samples.values()}'
-    def __call__(self):
+    def get_all_case(self):
         order = self.samples.keys()
         exclusion_sorted = [{key:exclusion[key] for key in order} 
                                 for exclusion in self.exclusion]
