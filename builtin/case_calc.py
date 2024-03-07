@@ -38,3 +38,5 @@ class CaseCalc:
         exclusion_vals = [tuple(exc.values()) for exc in exclusion_sorted]
         return {case for case 
         in itertools.product(*self.samples.values()) if case not in exclusion_vals}
+    def input_something(self,display:str)->str:
+        raise NotImplementedError('You must implement input_something(self,display:str)->str.')
