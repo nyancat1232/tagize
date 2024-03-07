@@ -1,0 +1,22 @@
+import itertools
+class CaseCalc:
+    samples : dict[str,set]
+    exclusion : list[dict[str,set]]
+    def __init__(self):
+        self.samples = dict()
+        self.exclusion = list()
+    def __setitem__(self,key:str,value:set):
+        self.samples[key]=value
+        return self
+    def __isub__(self,other:dict[str,set]):
+        self.exclusion.append(other)
+        return self
+    def __repr__(self):
+        return f'Case:{repr(self.samples)}\nCase exclusion: {self.exclusion}\n{self.samples.values()}'
+    def __call__(self):
+        order = self.samples.keys()
+        exclusion_sorted = [{key:exclusion[key] for key in order} 
+                                for exclusion in self.exclusion]
+        exclusion_vals = [tuple(exc.values()) for exc in exclusion_sorted]
+        return {case for case 
+        in itertools.product(*self.samples.values()) if case not in exclusion_vals}
