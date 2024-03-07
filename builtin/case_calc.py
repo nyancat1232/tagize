@@ -11,7 +11,7 @@ class CaseCalc:
     >>> cc2['fruit']={'apple','banana','orange'}
     >>> cc2['eat']={True,False}
     >>> cc2-={'eat':False,'fruit':'apple'}
-    >>> cc2()
+    >>> cc2.get_all_case()
     {('apple', True),
     ('banana', False),
     ('banana', True),
