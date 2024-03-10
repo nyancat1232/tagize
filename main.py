@@ -48,6 +48,13 @@ def split_supertag(df:pd.DataFrame)->tuple[pd.DataFrame,pd.DataFrame]:
     
     return df_new_content, df_group
 
+from typing import Generator
+def iter_split_supertag(df:pd.DataFrame)-> Generator[list[pd.DataFrame],None,None]:
+    dfs:list[pd.DataFrame] = [df.copy()]
+    while not dfs[-1].empty:
+        dfs.extend(split_supertag(dfs.pop(-1)))
+        yield dfs
+
 st.stop()
 
 cols = st.multiselect('select columns',df_group.index)
