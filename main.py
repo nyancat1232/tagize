@@ -24,6 +24,19 @@ def explode_tag(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
 df_content
 df_content=explode_tag(df_content)
 df_content
+
+def find_supertag(df:pd.DataFrame)-> list:
+    df_temp = df.copy()
+
+    set_tag = {val for val in df_temp['tag'].unique()}
+    set_content = {val for val in df_temp['content'].unique()}
+    content_supertag=set_tag&set_content
+    
+    df_temp = df_temp.drop_duplicates(subset=['content'])
+    df_temp['content_likely_has_supertag'] = df_temp['content'].apply(lambda val: val in content_supertag)
+    df_temp = df_temp[df_temp['content_likely_has_supertag']]
+    return df_temp['tag'].unique().tolist()
+
 st.stop()
 
 cols = st.multiselect('select columns',df_group.index)
