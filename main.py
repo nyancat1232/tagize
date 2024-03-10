@@ -1,17 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-files = {label:st.file_uploader(f"Load {label}") for label in ["content"]}
-
-if all(files.values()):
-    dfs = {key:pd.read_csv(files[key]) for key in files}
-    df_content = dfs['content']
-else:
-    st.stop()
-
 def split_hashtag(sr:pd.Series)->pd.Series:
     return sr.str.split("#").apply(lambda ss:ss[1:])
-
 
 def explode_tag(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
     df = df.copy()
@@ -21,7 +12,8 @@ def explode_tag(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
     df=df.rename(columns={'_split_hash':column_name})
     return df
 
-df_content
+df_content = pd.DataFrame({'content':[None],'tag':[None]})
+df_content = st.data_editor(df_content,num_rows='dynamic')
 df_content=explode_tag(df_content)
 with st.expander('debug'):
     df_content
