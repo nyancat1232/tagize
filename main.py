@@ -35,10 +35,9 @@ def split_supertag(df:pd.DataFrame)->tuple[pd.DataFrame,pd.DataFrame]:
     supertags = find_supertag(df_temp)
     with st.expander('debug'):
         supertags
-    row_has_supertag=df_temp['tag'].apply(lambda val:val in supertags)
-    df_group=df_temp[row_has_supertag]
-    df_new_content=df_temp[~row_has_supertag]
-    
+    sr_row_has_supertag=df_temp['tag'].apply(lambda val:val in supertags)
+    df_group=df_temp[sr_row_has_supertag]
+    df_new_content=df_temp[~sr_row_has_supertag]
     return df_new_content, df_group
 
 from typing import Generator
