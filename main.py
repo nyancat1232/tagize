@@ -38,6 +38,10 @@ def split_supertag(df:pd.DataFrame)->tuple[pd.DataFrame,pd.DataFrame]:
     sr_row_has_supertag=df_temp['tag'].apply(lambda val:val in supertags)
     df_group=df_temp[sr_row_has_supertag]
     df_new_content=df_temp[~sr_row_has_supertag]
+
+    sr_group_duplicate = df_group['content'].apply(lambda val: val in df_new_content['content'].unique())
+    df_group=df_group[~sr_group_duplicate]
+
     return df_new_content, df_group
 
 from typing import Generator
