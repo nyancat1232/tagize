@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 
-files = {label:st.file_uploader(f"Load {label}") for label in ["content","group","meta"]}
+files = {label:st.file_uploader(f"Load {label}") for label in ["content"]}
 
 if all(files.values()):
     dfs = {key:pd.read_csv(files[key]) for key in files}
     df_content = dfs['content']
-    df_group = dfs['group']
 else:
     st.stop()
 
@@ -14,9 +13,7 @@ def split_hashtag(sr:pd.Series)->pd.Series:
     return sr.str.split("#").apply(lambda ss:ss[1:])
 
 df_content
-
-df_group = df_group.set_index('tag_group')
-df_group
+st.stop()
 
 cols = st.multiselect('select columns',df_group.index)
 
