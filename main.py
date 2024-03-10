@@ -55,6 +55,12 @@ def iter_split_supertag(df:pd.DataFrame)-> Generator[list[pd.DataFrame],None,Non
         dfs.extend(split_supertag(dfs.pop(-1)))
         yield dfs
 
+for v in iter_split_supertag(df_content):
+    ll = len(v)
+    cols = st.columns(ll)
+    for ind,col in enumerate(cols):
+        with col:
+            v[ind]
 st.stop()
 
 cols = st.multiselect('select columns',df_group.index)
