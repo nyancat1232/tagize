@@ -1,8 +1,14 @@
 import streamlit as st
 import pandas as pd
 
-df_content = pd.read_csv(st.file_uploader("Load contents"))
-df_meta = pd.read_csv(st.file_uploader("Load metas"))
+files = {label:st.file_uploader(f"Load {label}") for label in ["content","group","meta"]}
+
+if all(files.values()):
+    dfs = {key:pd.read_csv(files[key]) for key in files}
+    df_content = dfs['content']
+    df_meta = dfs['group']
+else:
+    st.stop()
 
 def split_hashtag(sr:pd.Series)->pd.Series:
     return sr.str.split("#").apply(lambda ss:ss[1:])
