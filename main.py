@@ -40,7 +40,7 @@ def find_supertag(df:pd.DataFrame)-> list:
 def split_supertag(df:pd.DataFrame)->tuple[pd.DataFrame,pd.DataFrame]:
     df_temp = df.copy()
     supertags = find_supertag(df_temp)
-    with st.expander('v'):
+    with st.expander('debug'):
         supertags
     row_has_supertag=df_temp['tag'].apply(lambda val:val in supertags)
     df_group=df_temp[row_has_supertag]
