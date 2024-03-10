@@ -23,7 +23,8 @@ def explode_tag(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
 
 df_content
 df_content=explode_tag(df_content)
-df_content
+with st.expander('debug'):
+    df_content
 
 def find_supertag(df:pd.DataFrame)-> list:
     df_temp = df.copy()
