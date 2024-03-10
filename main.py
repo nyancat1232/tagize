@@ -26,8 +26,8 @@ def find_supertag(df:pd.DataFrame)-> list:
     content_supertag=set_tag&set_content
     
     df_temp = df_temp.drop_duplicates(subset=['content'])
-    df_temp['content_likely_has_supertag'] = df_temp['content'].apply(lambda val: val in content_supertag)
-    df_temp = df_temp[df_temp['content_likely_has_supertag']]
+    sr_content_likely_has_supertag = df_temp['content'].apply(lambda val: val in content_supertag)
+    df_temp = df_temp[sr_content_likely_has_supertag]
     return df_temp['tag'].unique().tolist()
 
 def split_supertag(df:pd.DataFrame)->tuple[pd.DataFrame,pd.DataFrame]:
