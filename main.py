@@ -12,6 +12,17 @@ else:
 def split_hashtag(sr:pd.Series)->pd.Series:
     return sr.str.split("#").apply(lambda ss:ss[1:])
 
+
+def explode_tag(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
+    df = df.copy()
+    df['_split_hash']=split_hashtag(df_content[column_name])
+    df=df.explode('_split_hash')
+    df=df.drop(columns=[column_name])
+    df=df.rename(columns={'_split_hash':column_name})
+    return df
+
+df_content
+df_content=explode_tag(df_content)
 df_content
 st.stop()
 
