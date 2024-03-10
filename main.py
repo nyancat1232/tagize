@@ -6,7 +6,7 @@ files = {label:st.file_uploader(f"Load {label}") for label in ["content","group"
 if all(files.values()):
     dfs = {key:pd.read_csv(files[key]) for key in files}
     df_content = dfs['content']
-    df_meta = dfs['group']
+    df_group = dfs['group']
 else:
     st.stop()
 
@@ -15,10 +15,10 @@ def split_hashtag(sr:pd.Series)->pd.Series:
 
 df_content
 
-df_meta = df_meta.set_index('tag_group')
-df_meta
+df_group = df_group.set_index('tag_group')
+df_group
 
-cols = st.multiselect('select columns',df_meta.index)
+cols = st.multiselect('select columns',df_group.index)
 
 def tableize(df_content:pd.DataFrame,df_meta:pd.DataFrame,selected_cols:list[str],tag_column_name:str='tag',drop_if:str|None=None)->pd.DataFrame:
     df_content = df_content.copy()
@@ -41,5 +41,5 @@ def tableize(df_content:pd.DataFrame,df_meta:pd.DataFrame,selected_cols:list[str
 
     return df_content
 
-df_res = tableize(df_content=df_content,df_meta=df_meta,selected_cols=cols,drop_if='any')
+df_res = tableize(df_content=df_content,df_meta=df_group,selected_cols=cols,drop_if='any')
 df_res
