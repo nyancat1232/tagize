@@ -230,7 +230,7 @@ class TableStructure:
         print(query)
         return self.execute_sql_write(query)
 
-    def read(self,ascending=False):
+    def read(self,ascending=False,columns:list[str]|None=None):
         sql = f'''SELECT * FROM {self.schema_name}.{self.table_name}
         '''
         df_exec_res = self.execute_sql_read(sql)
@@ -240,7 +240,12 @@ class TableStructure:
         conv_type = {column_name:_convert_pgsql_type_to_pandas_type(df_col_types['data_type'][column_name]) for column_name 
                      in df_col_types.index if column_name != column_identity}
         df_exec_res = df_exec_res.astype(conv_type)
-        return df_exec_res.sort_index(ascending=ascending)
+        df_exec_res = df_exec_res.sort_index(ascending=ascending)
+
+        if columns is not None:
+            df_exec_res = df_exec_res[columns]
+
+        return df_exec_res
     
     def expand_read(self,ascending=False):
         df = self.read().reset_index()
