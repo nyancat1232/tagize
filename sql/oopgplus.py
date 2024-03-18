@@ -42,6 +42,8 @@ def _convert_pgsql_type_to_pandas_type(pgtype:str):
             return 'datetime64[ns]'
         case 'timestamp with time zone':
             return 'datetime64[ns, UTC]'
+        case 'ARRAY':
+            return 'object'
         case _:
             raise NotImplementedError(pgtype)
 
