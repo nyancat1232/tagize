@@ -287,12 +287,13 @@ class TableStructure:
         return self.execute_sql_write(sql)
     
     def upload_append(self,**kwarg):
-        ke = ','.join([f'"{key}"' for key in kwarg])
-        vvv = ','.join(["'"+_apply_escaping(str(kwarg[key]))+"'" for key in kwarg])
+        columns = ','.join([f'"{key}"' for key in kwarg])
+        values = ','.join([_conversion_Sql_value(kwarg[key]) for key in kwarg])
         sql = text(f"""
-        INSERT INTO {self.schema_name}.{self.table_name} ({ke})
-        VALUES ({vvv})
+        INSERT INTO {self.schema_name}.{self.table_name} ({columns})
+        VALUES ({values})
         """)
+        
         return self.execute_sql_write(sql)
 
 
