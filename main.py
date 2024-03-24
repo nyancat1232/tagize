@@ -31,3 +31,12 @@ if st.button('edit'):
         st.toast(ind)
         content = df_post_edit.loc[ind].to_dict()
         ts.upload(id_row=ind,**content)
+
+
+content_input = st.text_area('input content')
+tags_input = st.data_editor([None,],num_rows='dynamic')
+content_input
+tags_input
+
+if st.button('append'):
+    ts.upload_append(content=content_input,tags=tags_input)
