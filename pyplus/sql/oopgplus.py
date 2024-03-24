@@ -8,7 +8,7 @@ from datetime import datetime
 def _apply_escaping(sentence:str):
     return sentence.replace("'","''")
 
-def _conversion_Sql_value(val:None|int|float|str|pd.Timestamp):
+def _conversion_Sql_value(val:None|int|float|str|pd.Timestamp|list):
     match val:
         case None:
             return 'NULL'
@@ -20,6 +20,9 @@ def _conversion_Sql_value(val:None|int|float|str|pd.Timestamp):
             return f"'{_apply_escaping(val)}'"
         case pd.Timestamp():
             return f"'{str(val)}'"
+        case list():
+            val_after = [f'"{str(v)}"' for v in val]
+            return "'{"+f"{",".join(val_after)}"+"}'"
         case _:
             raise NotImplementedError(type(val))
 
