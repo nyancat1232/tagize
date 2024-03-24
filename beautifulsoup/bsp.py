@@ -5,8 +5,6 @@ import pandas as pd
 from typing import Callable
 from dataclasses import dataclass,field
 from time import sleep
-import aiohttp
-import asyncio
 
 @dataclass
 class SoupElement:
@@ -61,12 +59,10 @@ class SoupElement:
 
 class BSPlus:
     bss : list[SoupElement]
-    session : aiohttp.ClientSession
 
-    def __init__(self,lbss:list[SoupElement],aiosession=None):
-        self.session = aiosession
+    def __init__(self,*bss:SoupElement):
         self.bss = []
-        for bs in lbss:
+        for bs in bss:
             self.bss.append(bs)
             
     def __call__(self,
