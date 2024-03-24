@@ -249,14 +249,14 @@ class TableStructure:
 
         return df_exec_res
     
-    def expand_read(self,ascending=False):
+    def read_expand(self,ascending=False):
         df = self.read().reset_index()
         
         all_children = self.get_all_children()[1:]
 
         for child in all_children:
             try:
-                df_child = child.expand_read()
+                df_child = child.read_expand()
                 df_child_columns = df_child.columns
                 df_child_indicate = {col : f'{child.parent_foreign_id}.{col}' for col in df_child_columns}
                 df_child = df_child.rename(columns=df_child_indicate)
