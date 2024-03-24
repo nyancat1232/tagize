@@ -3,7 +3,8 @@ import pandas as pd
 import pyplus.sql as sqlp
 import pyplus.streamlit as stp
 
-from pre import conn
+from pre import ex,conn
+ex()
 
 
 from hashprocessor.process import split_hashtag

@@ -1,6 +1,9 @@
 import pandas as pd
 import streamlit as st
 
+from pre import ex,conn
+ex()
+
 from hashprocessor.process import explode_tag,iter_split_supertag
 
 df_content = pd.DataFrame({'content':[None],'tag':[None]})
