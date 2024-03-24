@@ -23,4 +23,11 @@ df_post_edit['tags'] = split_hashtag(df_edit['tags'])
 
 stp.write_columns(original=df_post,edit=df_post_edit)
 
-st.stop()
+indexes_changed = df_post.compare(df_post_edit).index.tolist()
+indexes_changed
+
+if st.button('edit'):
+    for ind in indexes_changed:
+        st.toast(ind)
+        content = df_post_edit.loc[ind].to_dict()
+        ts.upload(id_row=ind,**content)
