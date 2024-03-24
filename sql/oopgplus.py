@@ -155,7 +155,7 @@ class TableStructure:
         self._identity_column = self.refresh_identity()
 
 
-    def execute_sql_read(self,sql,index_column=None,drop_duplicates=False)->pd.DataFrame:
+    def execute_sql_read(self,sql,index_column:str|None=None,drop_duplicates:bool=False)->pd.DataFrame:
         with self.engine.connect() as conn:
             ret = pd.read_sql_query(sql=sql,con=conn)
 
