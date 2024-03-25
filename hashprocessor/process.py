@@ -4,7 +4,7 @@ import streamlit as st
 def tag_split(sr:pd.Series)->pd.Series:
     return sr.str.split("#").apply(lambda ss:ss[1:])
 
-def tag_explode(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
+def tag_explode(df:pd.DataFrame,column_name='tags')->pd.DataFrame:
     df = df.copy()
     df['_split_hash']=tag_split(df[column_name])
     df=df.explode('_split_hash')
@@ -15,20 +15,20 @@ def tag_explode(df:pd.DataFrame,column_name='tag')->pd.DataFrame:
 def find_supertag(df:pd.DataFrame)-> list:
     df_temp = df.copy()
 
-    set_tag = {val for val in df_temp['tag'].unique()}
+    set_tag = {val for val in df_temp['tags'].unique()}
     set_content = {val for val in df_temp['content'].unique()}
     content_supertag=set_tag&set_content
     
     sr_content_likely_has_supertag = df_temp['content'].apply(lambda val: val in content_supertag)
     df_temp = df_temp[sr_content_likely_has_supertag]
-    return df_temp['tag'].unique().tolist()
+    return df_temp['tags'].unique().tolist()
 
 def split_supertag(df:pd.DataFrame)->tuple[pd.DataFrame,pd.DataFrame]:
     df_temp = df.copy()
     supertags = find_supertag(df_temp)
     with st.expander('debug'):
         supertags
-    sr_row_has_supertag=df_temp['tag'].apply(lambda val:val in supertags)
+    sr_row_has_supertag=df_temp['tags'].apply(lambda val:val in supertags)
     df_group=df_temp[sr_row_has_supertag]
     df_new_content=df_temp[~sr_row_has_supertag]
 
