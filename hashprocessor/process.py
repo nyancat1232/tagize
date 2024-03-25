@@ -7,7 +7,6 @@ def tag_split(sr:pd.Series)->pd.Series:
 def tag_explode(df:pd.DataFrame,column_name:str='tags')->pd.DataFrame:
     df = df.copy()
     df=df.explode(column_name)
-    df=df.rename(columns={'_split_hash':column_name})
     return df
 
 def find_supertag(df:pd.DataFrame,column_name:str='tags')-> list:
