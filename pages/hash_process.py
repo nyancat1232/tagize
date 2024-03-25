@@ -7,7 +7,7 @@ ex()
 from hashprocessor.process import tag_explode,iter_split_supertag
 
 df_content = ts.read()
-df_content = st.data_editor(df_content,num_rows='dynamic')
+st.dataframe(df_content)
 df_content=tag_explode(df_content)
 with st.expander('debug'):
     df_content
