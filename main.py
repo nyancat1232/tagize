@@ -7,7 +7,7 @@ from pre import ex,ts
 ex()
 
 
-from hashprocessor.process import split_hashtag
+from hashprocessor.process import tag_split
 
 df = ts.read()
 
@@ -19,7 +19,7 @@ df_edit = st.data_editor(df_edit,disabled=ts.refresh_identity())
 df_post = df.copy()
 
 df_post_edit = df_edit.copy()
-df_post_edit['tags'] = split_hashtag(df_edit['tags'])
+df_post_edit['tags'] = tag_split(df_edit['tags'])
 
 stp.write_columns(original=df_post,edit=df_post_edit)
 
