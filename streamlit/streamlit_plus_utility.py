@@ -7,9 +7,6 @@ from unicodedata import normalize
 
 @dataclass
 class FileDescription:
-    '''
-    Warning. this will be deprecated.
-    '''
     file_regex_str : str
     read_method : Callable
     var_name : str|None = None
