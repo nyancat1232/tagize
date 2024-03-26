@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from dataclasses import dataclass
-from typing import Callable,Any
+from typing import Callable,Self
 import re
 from unicodedata import normalize
 
@@ -24,8 +24,8 @@ class FileDescription:
     read_method : Callable
     var_name : str|None = None
     dataframe_post_process : Callable|None = None
-    read_method_kwarg : dict[Any,Any]|None = None
-    dataframe_post_process_kwarg : dict[Any,Any]|None  = None
+    read_method_kwarg : dict|None = None
+    dataframe_post_process_kwarg : dict|None  = None
 
 class FileExecutor:
     behaviors : list[FileDescription] = []
