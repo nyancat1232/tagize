@@ -9,8 +9,8 @@ from unicodedata import normalize
 class FileDescription:
     file_regex_str : str
     read_method : Callable
-    var_name : str|None = None
     dataframe_post_process : Callable|None = None
+    var_name : str|None = None
     read_method_kwarg : dict|None = None
     dataframe_post_process_kwarg : dict|None  = None
 
