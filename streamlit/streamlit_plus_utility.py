@@ -29,7 +29,7 @@ class FileExecutor:
     '''
     behaviors : list[FileDescription] = []
     
-    def __iadd__(self,other:tuple[str,Callable] | tuple[str,Callable,str|None,Callable,dict,dict] )->Self:
+    def __iadd__(self,other:tuple[str,Callable] | tuple[str,Callable,Callable,str|None,dict,dict] )->Self:
         '''
         add behavior
         
@@ -39,10 +39,10 @@ class FileExecutor:
             regex for finding a file.
         read_method : Callable
             function how to convert a file to a dataframe
-        var_name : str|None
-            key name for file
         dataframe_post_process : Callable
             function how to do after converting to a dataframe
+        var_name : str|None
+            key name for file
         read_method_kward : dict|None
             ??
         dataframe_post_process_kwarg : dict|None
