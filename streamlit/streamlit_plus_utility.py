@@ -61,7 +61,7 @@ class FileExecutor:
         self.behaviors.append(FileDescription(*other))
         return self
     
-    def __call__(self,show:bool=False,label:str='multifiles test'):
+    def __call__(self,show:bool=False,label:str='multifiles test')->dict[str,pd.DataFrame]:
         '''
         Accept multiple files and reads some files you want.
         ## Parameters:
