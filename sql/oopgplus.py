@@ -245,8 +245,10 @@ class TableStructure:
         column_identity = df_exec_res.index.name
 
         conv_type = {column_name:_convert_pgsql_type_to_pandas_type(df_col_types['data_type'][column_name]) for column_name 
-                     in df_col_types.index if column_name != column_identity}
+                     in df_col_types.index}
+        df_exec_res = df_exec_res.reset_index()
         df_exec_res = df_exec_res.astype(conv_type)
+        df_exec_res = df_exec_res.set_index(column_identity)
         df_exec_res = df_exec_res.sort_index(ascending=ascending)
 
         if columns is not None:
