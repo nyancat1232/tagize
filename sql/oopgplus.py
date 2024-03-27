@@ -3,21 +3,24 @@ from sqlalchemy.sql import text
 from dataclasses import dataclass
 import sqlalchemy
 from typing import Self
-from datetime import datetime
+from datetime import datetime,date
+import numpy as np
 
 def _apply_escaping(sentence:str):
     return sentence.replace("'","''")
 
-def _conversion_Sql_value(val:None|int|float|str|pd.Timestamp|list):
+def _conversion_Sql_value(val:None|int|float|np.floating|str|date|pd.Timestamp|list):
     match val:
         case None:
             return 'NULL'
         case int():
             return f"'{str(val)}'"
-        case float():
+        case float()|np.floating():
             return f"'{str(val)}'"
         case str():
             return f"'{_apply_escaping(val)}'"
+        case date():
+            return f"'{val.strftime("%Y-%m-%d")}'"
         case pd.Timestamp():
             return f"'{str(val)}'"
         case list():
