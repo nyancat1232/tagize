@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.12
 
 WORKDIR /tagize
 
@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY requirements.txt ./
 COPY main.py ./
+COPY pre.py ./
+COPY pyplus ./pyplus
+COPY hashprocessor ./hashprocessor
 COPY .streamlit ./.streamlit
 
 RUN pip install -r requirements.txt
