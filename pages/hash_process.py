@@ -12,10 +12,14 @@ df_content=tag_explode(df_content)
 with st.expander('debug'):
     df_content
 
-
+final_res = None
 for v in iter_split_supertag(df_content):
+    final_res = v
     ll = len(v)
     cols = st.columns(ll)
     for ind,col in enumerate(cols):
         with col:
             v[ind]
+
+df = pd.concat(final_res)
+df
